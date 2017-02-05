@@ -9,9 +9,31 @@
  */
 package toy.box;
 
+import kiss.I;
+import kiss.Manageable;
+import kiss.Singleton;
+import toybox.filesystem.FSPath;
+
 /**
  * @version 2017/02/05 23:00:29
  */
+@Manageable(lifestyle = Singleton.class)
 public class Toybox {
 
+    /** The application context directory. */
+    public FSPath contextDirectory;
+
+    /**
+     * <p>
+     * Entry point.
+     * </p>
+     * 
+     * @param args
+     */
+    public static void main(String[] args) {
+        I.load(Toybox.class, true);
+
+        Window window = I.make(Window.class);
+        window.open();
+    }
 }
