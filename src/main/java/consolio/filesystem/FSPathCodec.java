@@ -7,14 +7,13 @@
  *
  *          http://opensource.org/licenses/mit-license.php
  */
-package toy.box.codec;
+package consolio.filesystem;
 
 import kiss.Decoder;
 import kiss.Encoder;
-import toybox.filesystem.FSPath;
 
 /**
- * @version 2017/02/06 1:52:14
+ * @version 2017/02/09 4:41:47
  */
 public class FSPathCodec implements Decoder<FSPath>, Encoder<FSPath> {
 

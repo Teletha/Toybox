@@ -39,6 +39,7 @@ import bebop.input.Key;
 import bebop.input.KeyBind;
 import bebop.ui.AbstractUI;
 import bebop.util.Resources;
+import consolio.model.Console;
 import consolio.util.NativeProcessListener;
 
 /**

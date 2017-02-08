@@ -10,14 +10,24 @@
 package consolio;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.FillLayout;
 
+import bebop.input.Key;
+import bebop.util.Resources;
+import consolio.model.Console;
+import consolio.model.Model;
 import consolio.ui.Application;
+import consolio.ui.UI;
+import kiss.I;
 
 /**
  * @version 2017/02/08 20:00:18
  */
 public class Consolio extends Application {
+
+    private final Model model = I.make(Model.class);
 
     /**
      * {@inheritDoc}
@@ -25,6 +35,21 @@ public class Consolio extends Application {
     @Override
     public void start() {
         shell.setLayout(new FillLayout(SWT.VERTICAL));
+        shell.setImage(Resources.getImage(I.locate("icon.ico")));
+
+        // TAB
+        CTabFolder folder = new CTabFolder(shell, SWT.None);
+        folder.setMinimumCharacters(10);
+        folder.setTabHeight(22);
+
+        UI.when(Key.T).at(folder).to(e -> {
+            System.out.println(e);
+        });
+
+        for (Console console : model.consoles) {
+            CTabItem item = new CTabItem(folder, SWT.None);
+            item.setText("  " + console.getContext().getName() + "    ");
+        }
     }
 
     /**

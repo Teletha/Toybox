@@ -20,6 +20,7 @@ import toybox.cli.Command;
 import toybox.cli.CommandLine;
 import bebop.InUIThread;
 import bebop.InWorkerThread;
+import consolio.model.Console;
 import consolio.util.NativeProcess;
 
 /**

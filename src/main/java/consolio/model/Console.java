@@ -7,9 +7,9 @@
  *
  *          http://opensource.org/licenses/mit-license.php
  */
-package toy.box;
+package consolio.model;
 
-import toybox.filesystem.FSPath;
+import consolio.filesystem.FSPath;
 
 /**
  * @version 2017/02/06 1:52:04

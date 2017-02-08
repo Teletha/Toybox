@@ -9,6 +9,7 @@
  */
 package toy.box;
 
+import consolio.model.Console;
 import toybox.cli.Command;
 
 /**

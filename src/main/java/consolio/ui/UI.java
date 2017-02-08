@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
+import bebop.input.Key;
 import kiss.Events;
 
 /**
@@ -36,6 +37,69 @@ public class UI {
      */
     public static Locator when(User... actions) {
         return new Locator(actions);
+    }
+
+    /**
+     * <p>
+     * Listen the target user action at the specified {@link Widget}.
+     * </p>
+     * 
+     * @param actions A list of target user action to listen.
+     * @return An event source locator.
+     */
+    public static KeyLocator when(Key key) {
+        return new KeyLocator(key);
+    }
+
+    /**
+     * @version 2017/02/09 5:02:38
+     */
+    public static class KeyLocator {
+
+        private final Key key;
+
+        /**
+         * Hide constructor.
+         */
+        private KeyLocator(Key key) {
+            this.key = key;
+        }
+
+        /**
+         * <p>
+         * Locate event source.
+         * </p>
+         * 
+         * @param widget A target {@link Widget}.
+         * @return An {@link Events} stream.
+         */
+        public Events<Event> at(Widget widget) {
+            return new Events<>(observer -> {
+                Listener listener = e -> {
+                    observer.accept(e);
+                };
+
+                // register
+                widget.addListener(User.KeyDown.type, listener);
+
+                // unregister
+                return () -> {
+                    widget.removeListener(User.KeyDown.type, listener);
+                };
+            });
+        }
+
+        /**
+         * <p>
+         * Locate event source.
+         * </p>
+         * 
+         * @param widget A target {@link Widget}.
+         * @return An {@link Events} stream.
+         */
+        public <W extends Widget> Events<W> in(W widget) {
+            return at(widget).mapTo(widget);
+        }
     }
 
     /**

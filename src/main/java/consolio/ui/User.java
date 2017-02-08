@@ -26,6 +26,10 @@ public enum User {
 
     Deiconify(SWT.Deiconify),
 
+    KeyDown(SWT.KeyDown),
+
+    KeyUp(SWT.KeyUp),
+
     Move(SWT.Move),
 
     Resize(SWT.Resize);
