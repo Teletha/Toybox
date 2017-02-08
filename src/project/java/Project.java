@@ -17,7 +17,7 @@ public class Project extends bee.api.Project {
         require("com.ibm.icu", "icu4j", "4.8.1.1");
         require("net.java.dev.jna", "platform", "3.5.1");
         require("com.github.teletha", "antibug", "0.3");
-        require("jnativehook", "jnativehook", "1.0");
+        require("com.1stleg", "jnativehook", "1.1.5");
 
         repository("http://maven-eclipse.github.io/dev-releases/maven");
     }
