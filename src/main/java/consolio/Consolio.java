@@ -57,6 +57,18 @@ public class Consolio extends Application {
             CTabItem item = new CTabItem(folder, SWT.None);
             item.setText("  " + console.getContext().getName() + "    ");
         }
+
+        UIBuilder ui = virtualize();
+    }
+
+    public UIBuilder virtualize() {
+        return new UIBuilder() {
+            {
+                $("tabs", foŕ(model.consoles, console -> {
+                    $("tab");
+                }));
+            }
+        };
     }
 
     /**
