@@ -9,6 +9,8 @@
  */
 package consolio;
 
+import static consolio.bebop.ui.UI.*;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -17,7 +19,7 @@ import org.eclipse.swt.layout.FillLayout;
 import bebop.input.Key;
 import bebop.util.Resources;
 import consolio.bebop.ui.Application;
-import consolio.bebop.ui.UI;
+import consolio.filesystem.FSPath;
 import consolio.model.Console;
 import consolio.model.Model;
 import kiss.I;
@@ -34,6 +36,8 @@ public class Consolio extends Application {
      */
     @Override
     public void start() {
+        model.restore();
+
         shell.setLayout(new FillLayout(SWT.VERTICAL));
         shell.setImage(Resources.getImage(I.locate("icon.ico")));
 
@@ -42,8 +46,11 @@ public class Consolio extends Application {
         folder.setMinimumCharacters(10);
         folder.setTabHeight(22);
 
-        UI.when(Key.T).at(folder).to(e -> {
-            System.out.println(e);
+        whenPress(Key.T).at(folder).to(e -> {
+            Console console = new Console();
+            console.setContext(FSPath.locate(I.locate("").toAbsolutePath()));
+            model.consoles.add(console);
+            model.store();
         });
 
         for (Console console : model.consoles) {

@@ -28,7 +28,11 @@ public class Model {
     public List<Console> consoles = new ArrayList();
 
     public void restore() {
-        I.read(config(), this);
+        try {
+            I.read(config(), this);
+        } catch (Throwable e) {
+
+        }
     }
 
     public void store() {
@@ -36,7 +40,7 @@ public class Model {
     }
 
     public Path config() {
-        Path path = I.locate("").toAbsolutePath().resolve("preference").resolve(getClass().getName() + ".txt");
+        Path path = I.locate("").toAbsolutePath().resolve("preferences").resolve(getClass().getName() + ".txt");
         if (Files.notExists(path)) {
             try {
                 Files.createDirectories(path.getParent());

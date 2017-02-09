@@ -47,7 +47,7 @@ public class UI {
      * @param actions A list of target user action to listen.
      * @return An event source locator.
      */
-    public static KeyLocator when(Key key) {
+    public static KeyLocator whenPress(Key key) {
         return new KeyLocator(key);
     }
 
