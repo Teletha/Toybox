@@ -36,7 +36,7 @@ public class Config {
     }
 
     public static <C> C application(Class<C> config) {
-        return of(config, I.locate("").toAbsolutePath().resolve("preference").resolve(config.getName() + ".txt"));
+        return of(config, I.locate("").toAbsolutePath().resolve("preferences").resolve(config.getName() + ".txt"));
     }
 
     public static <C> C of(Class<C> config, Path file) {

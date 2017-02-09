@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+
 import consolio.UIBuilder.WidgetNode;
 import kiss.Tree;
 
@@ -24,7 +27,12 @@ public class UIBuilder extends Tree<WidgetNode> {
     protected UIBuilder() {
         super(WidgetNode::new, (parent, child) -> {
             child.accept(parent);
-        });
+        }, null);
+    }
+
+    public void materialize(Composite composite) {
+        Control[] children = composite.getChildren();
+
     }
 
     /**
@@ -39,6 +47,8 @@ public class UIBuilder extends Tree<WidgetNode> {
 
         private WidgetNode(String name, int id, Object context) {
             this.name = name;
+
+            System.out.println(name + "  " + id + "   " + context);
         }
 
         /**

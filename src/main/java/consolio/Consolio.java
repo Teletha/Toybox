@@ -9,18 +9,11 @@
  */
 package consolio;
 
-import static consolio.bebop.ui.UI.*;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.FillLayout;
 
-import bebop.input.Key;
 import bebop.util.Resources;
 import consolio.bebop.ui.Application;
-import consolio.filesystem.FSPath;
-import consolio.model.Console;
 import consolio.model.Model;
 import kiss.I;
 
@@ -41,24 +34,24 @@ public class Consolio extends Application {
         shell.setLayout(new FillLayout(SWT.VERTICAL));
         shell.setImage(Resources.getImage(I.locate("icon.ico")));
 
-        // TAB
-        CTabFolder folder = new CTabFolder(shell, SWT.None);
-        folder.setMinimumCharacters(10);
-        folder.setTabHeight(22);
+        // // TAB
+        // CTabFolder folder = new CTabFolder(shell, SWT.None);
+        // folder.setMinimumCharacters(10);
+        // folder.setTabHeight(22);
+        //
+        // whenPress(Key.T).at(folder).to(e -> {
+        // Console console = new Console();
+        // console.setContext(FSPath.locate(I.locate("").toAbsolutePath()));
+        // model.consoles.add(console);
+        // model.store();
+        // });
+        //
+        // for (Console console : model.consoles) {
+        // CTabItem item = new CTabItem(folder, SWT.None);
+        // item.setText(" " + console.getContext().getName() + " ");
+        // }
 
-        whenPress(Key.T).at(folder).to(e -> {
-            Console console = new Console();
-            console.setContext(FSPath.locate(I.locate("").toAbsolutePath()));
-            model.consoles.add(console);
-            model.store();
-        });
-
-        for (Console console : model.consoles) {
-            CTabItem item = new CTabItem(folder, SWT.None);
-            item.setText("  " + console.getContext().getName() + "    ");
-        }
-
-        UIBuilder ui = virtualize();
+        virtualize().materialize(shell);
     }
 
     public UIBuilder virtualize() {
