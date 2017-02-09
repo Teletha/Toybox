@@ -31,10 +31,10 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.widgets.Display;
 
+import consolio.filesystem.FSPath;
 import kiss.I;
 import kiss.Manageable;
 import kiss.Preference;
-import toybox.filesystem.FSPath;
 
 /**
  * <p>

@@ -11,6 +11,9 @@ package toybox.filesystem;
 
 import org.junit.Test;
 
+import consolio.filesystem.FSPath;
+import consolio.filesystem.FSPathList;
+
 /**
  * @version 2012/03/12 9:55:34
  */

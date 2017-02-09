@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import toybox.filesystem.FSPath;
+import consolio.filesystem.FSPath;
 
 /**
  * @version 2012/03/07 20:40:20

@@ -13,6 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import antibug.PrivateModule;
+import consolio.cli.Argument;
+import consolio.cli.Command;
+import consolio.cli.CommandLine;
 
 /**
  * @version 2012/02/29 19:01:30

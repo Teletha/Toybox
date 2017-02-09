@@ -16,10 +16,10 @@ import org.eclipse.swt.layout.FillLayout;
 
 import bebop.input.Key;
 import bebop.util.Resources;
+import consolio.bebop.ui.Application;
+import consolio.bebop.ui.UI;
 import consolio.model.Console;
 import consolio.model.Model;
-import consolio.ui.Application;
-import consolio.ui.UI;
 import kiss.I;
 
 /**
