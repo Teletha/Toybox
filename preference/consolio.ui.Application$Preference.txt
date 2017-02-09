@@ -1,3 +1,0 @@
-#local configuration.
-#Thu Feb 09 04:38:22 JST 2017
-bounds=752 213 675 435
