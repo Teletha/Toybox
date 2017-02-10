@@ -9,9 +9,8 @@
  */
 package consolio.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import consolio.bebop.ui.Configurable;
+import consolio.bebop.ui.Selectable;
 import kiss.Manageable;
 import kiss.Singleton;
 
@@ -19,7 +18,5 @@ import kiss.Singleton;
  * @version 2017/02/09 4:43:55
  */
 @Manageable(lifestyle = Singleton.class)
-public class Model implements Configurable {
-
-    public List<Console> consoles = new ArrayList();
+public class Consoles extends Selectable<Console> implements Configurable<Consoles> {
 }

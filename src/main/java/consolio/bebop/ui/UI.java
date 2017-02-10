@@ -70,6 +70,18 @@ public class UI {
          * Locate event source.
          * </p>
          * 
+         * @param ui A target {@link AbstractUI}.
+         * @return An {@link Events} stream.
+         */
+        public Events<Event> at(AbstractUI ui) {
+            return at(ui.widget());
+        }
+
+        /**
+         * <p>
+         * Locate event source.
+         * </p>
+         * 
          * @param widget A target {@link Widget}.
          * @return An {@link Events} stream.
          */

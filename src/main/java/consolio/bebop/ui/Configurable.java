@@ -7,11 +7,12 @@
  *
  *          http://opensource.org/licenses/mit-license.php
  */
-package consolio.model;
+package consolio.bebop.ui;
 
 import java.nio.file.Path;
 
 import kiss.I;
+import kiss.model.Model;
 
 /**
  * @version 2017/02/10 10:19:05
@@ -58,6 +59,6 @@ public interface Configurable<Self> {
      * @return A location of persistence file.
      */
     default Path locate() {
-        return I.locate("preferences").resolve(getClass().getName() + ".json");
+        return I.locate("preferences").resolve(Model.of(this).type.getName() + ".json");
     }
 }

@@ -11,10 +11,17 @@ package consolio;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Event;
 
+import bebop.input.Key;
 import bebop.util.Resources;
 import consolio.bebop.ui.Application;
-import consolio.model.Model;
+import consolio.bebop.ui.TabFolder;
+import consolio.bebop.ui.UI;
+import consolio.filesystem.FSPath;
+import consolio.model.Console;
+import consolio.model.Consoles;
+import kiss.Events;
 import kiss.I;
 
 /**
@@ -22,23 +29,34 @@ import kiss.I;
  */
 public class Consolio extends Application {
 
-    private final Model model = I.make(Model.class);
+    private final Consoles model = I.make(Consoles.class).restore();
+
+    private final TabFolder<Console> folder = new TabFolder<>(shell, model, p -> item -> {
+        return new Tab().text(" " + item.getContext().getName() + " ");
+    }).minimumCharacters(10).tabHeight(22);
+
+    public final Events<Event> addConsole = UI.whenPress(Key.T).at(folder);
+
+    /**
+     * 
+     */
+    private Consolio() {
+        addConsole.to(e -> {
+            Console console = new Console();
+            console.setContext(FSPath.locate(I.locate("")));
+            model.add(console);
+            model.store();
+        });
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void start() {
-        model.restore();
-
         shell.setLayout(new FillLayout(SWT.VERTICAL));
         shell.setImage(Resources.getImage(I.locate("icon.ico")));
 
-        // // TAB
-        // CTabFolder folder = new CTabFolder(shell, SWT.None);
-        // folder.setMinimumCharacters(10);
-        // folder.setTabHeight(22);
-        //
         // whenPress(Key.T).at(folder).to(e -> {
         // Console console = new Console();
         // console.setContext(FSPath.locate(I.locate("").toAbsolutePath()));
@@ -46,10 +64,6 @@ public class Consolio extends Application {
         // model.store();
         // });
         //
-        // for (Console console : model.consoles) {
-        // CTabItem item = new CTabItem(folder, SWT.None);
-        // item.setText(" " + console.getContext().getName() + " ");
-        // }
 
         virtualize().materialize(shell);
     }
@@ -57,7 +71,7 @@ public class Consolio extends Application {
     public UIBuilder virtualize() {
         return new UIBuilder() {
             {
-                $("tabs", foŕ(model.consoles, console -> {
+                $("tabs", foŕ(model, console -> {
                     $("tab");
                 }));
             }
