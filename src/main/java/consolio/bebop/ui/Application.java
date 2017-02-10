@@ -22,12 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import consolio.model.Configurable;
 import kiss.I;
 
 /**
@@ -243,21 +243,22 @@ public abstract class Application {
          */
         private void initialize() {
             // initialize application's common abilities
-            Preference preference = Config.application(Preference.class);
+            WindowPreference preference = I.make(WindowPreference.class).restore();
 
             Shell shell = application.shell;
-            shell.setBounds(preference.getBounds());
-            preference.getWindowState().applier.accept(shell);
+            preference.size(shell);
 
             when(User.Close).at(shell).to(application::stop);
             when(User.Move, User.Resize).in(shell).debounce(500, MILLISECONDS).on(UI.Thread).to(e -> {
                 if (shell.getMaximized()) {
-                    preference.setWindowState(WindowState.Max);
+                    preference.state = WindowState.Max;
                 } else if (shell.getMinimized()) {
-                    preference.setWindowState(WindowState.Min);
+                    preference.state = WindowState.Min;
                 } else {
-                    preference.setBounds(shell.getBounds());
+                    preference.state = WindowState.Normal;
+                    preference.bounds = shell.getBounds();
                 }
+                preference.store();
             });
 
             // show UI
@@ -307,36 +308,43 @@ public abstract class Application {
     /**
      * @version 2017/02/09 3:12:02
      */
-    public static interface Preference {
+    private static class WindowPreference implements Configurable<WindowPreference> {
 
-        default Rectangle getBounds() {
-            Rectangle screen = Display.getDefault().getPrimaryMonitor().getClientArea();
-            return new Rectangle(screen.width / 4, screen.height / 4, screen.width / 2, screen.height / 2);
+        /** The physical display. */
+        private Rectangle screen = Display.getDefault().getPrimaryMonitor().getClientArea();
+
+        /** The size and location. */
+        public Rectangle bounds = new Rectangle(screen.width / 4, screen.height / 4, screen.width / 2, screen.height / 2);
+
+        /** The window state. */
+        public WindowState state = WindowState.Normal;
+
+        /**
+         * <p>
+         * Apply window size and location setting.
+         * </p>
+         * 
+         * @param shell A target to apply.
+         */
+        private void size(Shell shell) {
+            shell.setBounds(bounds);
+
+            switch (state) {
+            case Max:
+                shell.setMaximized(true);
+                break;
+
+            case Min:
+                shell.setMinimized(true);
+                break;
+            }
         }
-
-        void setBounds(Rectangle bounds);
-
-        default WindowState getWindowState() {
-            return WindowState.Normal;
-        }
-
-        void setWindowState(WindowState state);
     }
 
     /**
      * @version 2017/02/10 0:42:50
      */
-    public static enum WindowState {
-        Max(s -> s.setMaximized(true)), Min(s -> s.setMinimized(true)), Normal(s -> {
-        });
-
-        private final Consumer<Shell> applier;
-
-        /**
-         * @param applier
-         */
-        private WindowState(Consumer<Shell> applier) {
-            this.applier = applier;
-        }
+    private static enum WindowState {
+        Max, Min, Normal;
     }
 }
