@@ -242,27 +242,15 @@ public abstract class Application {
          * 
          */
         private void initialize() {
-            // initialize application's common abilities
-            WindowPreference preference = I.make(WindowPreference.class).restore();
-
             Shell shell = application.shell;
-            preference.size(shell);
+
+            // initialize application's common abilities
+            I.make(WindowPreference.class).restore().size(shell);
 
             when(User.Close).at(shell).to(application::stop);
-            when(User.Move, User.Resize).in(shell).debounce(500, MILLISECONDS).on(UI.Thread).to(e -> {
-                if (shell.getMaximized()) {
-                    preference.state = WindowState.Max;
-                } else if (shell.getMinimized()) {
-                    preference.state = WindowState.Min;
-                } else {
-                    preference.state = WindowState.Normal;
-                    preference.bounds = shell.getBounds();
-                }
-                preference.store();
-            });
 
             // show UI
-            application.shell.open();
+            shell.open();
         }
 
         /**
@@ -338,6 +326,18 @@ public abstract class Application {
                 shell.setMinimized(true);
                 break;
             }
+
+            when(User.Move, User.Resize).in(shell).debounce(500, MILLISECONDS).on(UI.Thread).to(e -> {
+                if (shell.getMaximized()) {
+                    state = WindowState.Max;
+                } else if (shell.getMinimized()) {
+                    state = WindowState.Min;
+                } else {
+                    state = WindowState.Normal;
+                    bounds = shell.getBounds();
+                }
+                store();
+            });
         }
     }
 
