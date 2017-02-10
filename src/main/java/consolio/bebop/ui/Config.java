@@ -60,7 +60,7 @@ public class Config {
             Property property = model.property(name);
 
             if (property == null) {
-                return null;
+                return !method.isDefault() ? null : invokeDefaultMethod(p, method, args);
             } else {
                 Properties properties = new Properties();
                 properties.load(Files.newBufferedReader(file, StandardCharsets.UTF_8));

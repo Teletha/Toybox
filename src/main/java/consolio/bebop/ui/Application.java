@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
@@ -219,20 +220,7 @@ public abstract class Application {
             // define user specified UI
             application.start();
 
-            // initialize application's common abilities
-            Preference preference = Config.application(Preference.class);
-
-            Shell shell = application.shell;
-            shell.setBounds(preference.getBounds());
-            when(User.Close).at(shell).to(application::stop);
-            when(User.Move, User.Resize).in(shell)
-                    .debounce(500, MILLISECONDS)
-                    .on(UI.Thread)
-                    .map(Shell::getBounds)
-                    .to(preference::setBounds);
-
-            // show UI
-            application.shell.open();
+            initialize();
 
             // run the event loop as long as the window is open
             Display display = Display.getCurrent();
@@ -242,12 +230,38 @@ public abstract class Application {
                 if (!display.readAndDispatch()) {
                     // if there are currently no other OS event to process
                     // sleep until the next OS event is available
-                    display.sleep();
+                    if (!application.terminate) display.sleep();
                 }
             }
 
             // Clean up resources.
             display.dispose();
+        }
+
+        /**
+         * 
+         */
+        private void initialize() {
+            // initialize application's common abilities
+            Preference preference = Config.application(Preference.class);
+
+            Shell shell = application.shell;
+            shell.setBounds(preference.getBounds());
+            preference.getWindowState().applier.accept(shell);
+
+            when(User.Close).at(shell).to(application::stop);
+            when(User.Move, User.Resize).in(shell).debounce(500, MILLISECONDS).on(UI.Thread).to(e -> {
+                if (shell.getMaximized()) {
+                    preference.setWindowState(WindowState.Max);
+                } else if (shell.getMinimized()) {
+                    preference.setWindowState(WindowState.Min);
+                } else {
+                    preference.setBounds(shell.getBounds());
+                }
+            });
+
+            // show UI
+            application.shell.open();
         }
 
         /**
@@ -301,5 +315,28 @@ public abstract class Application {
         }
 
         void setBounds(Rectangle bounds);
+
+        default WindowState getWindowState() {
+            return WindowState.Normal;
+        }
+
+        void setWindowState(WindowState state);
+    }
+
+    /**
+     * @version 2017/02/10 0:42:50
+     */
+    public static enum WindowState {
+        Max(s -> s.setMaximized(true)), Min(s -> s.setMinimized(true)), Normal(s -> {
+        });
+
+        private final Consumer<Shell> applier;
+
+        /**
+         * @param applier
+         */
+        private WindowState(Consumer<Shell> applier) {
+            this.applier = applier;
+        }
     }
 }
