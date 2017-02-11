@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
 
 import consolio.bebop.ui.UIBuilder.UINode;
@@ -56,15 +55,6 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
      * @param node
      */
     private void materialize(Composite parent, UINode node) {
-        for (Control child : parent.getChildren()) {
-            UINode exist = (UINode) child.getData("node");
-
-            if (exist == node) {
-                return;
-            }
-        }
-
-        // new node
         Widget widget = node.ui.build(parent, node.model);
 
         if (widget instanceof Composite) {

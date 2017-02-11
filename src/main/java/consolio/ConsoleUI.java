@@ -35,10 +35,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import bebop.InUIThread;
-import bebop.input.Key;
 import bebop.input.KeyBind;
 import bebop.ui.AbstractUI;
 import bebop.util.Resources;
+import consolio.bebop.ui.Key;
 import consolio.model.Console;
 import consolio.util.NativeProcessListener;
 

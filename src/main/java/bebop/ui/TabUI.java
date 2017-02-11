@@ -21,9 +21,9 @@ import org.eclipse.swt.widgets.Event;
 
 import bebop.Listen;
 import bebop.Speak;
-import bebop.input.Key;
 import bebop.input.KeyBind;
 import bebop.model.Selectable;
+import consolio.bebop.ui.Key;
 
 /**
  * @version 2012/02/29 23:58:17

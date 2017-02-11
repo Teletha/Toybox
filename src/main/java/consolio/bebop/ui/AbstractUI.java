@@ -21,7 +21,7 @@ import kiss.I;
 import kiss.Table;
 
 /**
- * @version 2017/02/10 10:57:59
+ * @version 2017/02/11 23:12:07
  */
 public abstract class AbstractUI<M> implements Cloneable {
 
@@ -46,6 +46,15 @@ public abstract class AbstractUI<M> implements Cloneable {
         }
     }
 
+    /**
+     * <p>
+     * Build actual SWT widget for the specified model.
+     * </p>
+     * 
+     * @param parent A parent {@link Widget}.
+     * @param model A current model.
+     * @return A created {@link Widget}.
+     */
     protected abstract Widget materialize(Composite parent, M model);
 
     /**
@@ -70,21 +79,5 @@ public abstract class AbstractUI<M> implements Cloneable {
             });
         }
         return materialized;
-    }
-
-    /**
-     * <p>
-     * Helper method to check the parent {@link Widget} type.
-     * </p>
-     * 
-     * @param type A type to require.
-     * @param parent A parent composite to check.
-     * @return
-     */
-    protected final <W extends Composite> W requireParent(Class<W> type, Composite parent) {
-        if (type.isAssignableFrom(parent.getClass())) {
-            return (W) parent;
-        }
-        throw new IllegalArgumentException(getClass().getName() + " requires " + type.getSimpleName() + " as parent widget.");
     }
 }

@@ -21,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import consolio.bebop.ui.Key;
+
 /**
  * @version 2011/11/09 21:47:59
  */

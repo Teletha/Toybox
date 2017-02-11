@@ -12,16 +12,17 @@ package consolio;
 import java.util.ArrayList;
 import java.util.List;
 
-import kiss.Disposable;
-import kiss.I;
-import kiss.Manageable;
-import kiss.Preference;
 import bebop.InUIThread;
 import bebop.InWorkerThread;
+import consolio.ConsoleView.ConsoleText;
 import consolio.cli.Command;
 import consolio.cli.CommandLine;
 import consolio.model.Console;
 import consolio.util.NativeProcess;
+import kiss.Disposable;
+import kiss.I;
+import kiss.Manageable;
+import kiss.Preference;
 
 /**
  * @version 2013/01/07 2:06:21
@@ -64,7 +65,7 @@ public class TaskManager {
      * @param ui
      * @param input
      */
-    Disposable execute(Console console, ConsoleUI ui, String input) {
+    Disposable execute(Console console, ConsoleText ui, String input) {
         addHistory(input);
 
         Command command = CommandLine.parse(input);
@@ -167,7 +168,7 @@ public class TaskManager {
          * @param ui
          * @param command
          */
-        private void set(Console console, ConsoleUI ui, Task command) {
+        private void set(Console console, ConsoleText ui, Task command) {
             this.command = command;
             this.command.console = console;
             this.command.ui = ui;

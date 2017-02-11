@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 
-import bebop.input.Key;
 import bebop.util.Resources;
 import kiss.Extensible;
 import kiss.model.Model;
@@ -54,7 +53,6 @@ public abstract class AbstractUI<M, W extends Composite> implements Extensible {
         this.model = model;
         this.ui = createUI(parent);
 
-        Key.bind(this, ui);
         UIEvent.listen(ui, this);
 
         // Register a listener to display the background image. In order to display the background

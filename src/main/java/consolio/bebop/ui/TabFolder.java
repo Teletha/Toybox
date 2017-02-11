@@ -30,9 +30,9 @@ import kiss.Events;
 public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelectableUI<M, Child> {
 
     /**
-     * @param model
+     * Hide constructor.
      */
-    public TabFolder(Class<M> model) {
+    TabFolder() {
     }
 
     private int minimumCharacters;

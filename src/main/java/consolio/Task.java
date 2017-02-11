@@ -9,6 +9,7 @@
  */
 package consolio;
 
+import consolio.ConsoleView.ConsoleText;
 import consolio.cli.Command;
 import consolio.model.Console;
 
@@ -21,7 +22,7 @@ public abstract class Task implements Command<ConsoleUI> {
     protected Console console;
 
     /** The associated console interface. */
-    protected ConsoleUI ui;
+    protected ConsoleText ui;
 
     /**
      * {@inheritDoc}

@@ -14,12 +14,15 @@ import static consolio.bebop.ui.UI.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 
-import bebop.input.Key;
 import bebop.util.Resources;
 import consolio.bebop.ui.Application;
+import consolio.bebop.ui.Key;
+import consolio.bebop.ui.Key.With;
 import consolio.bebop.ui.TabFolder;
+import consolio.bebop.ui.UI;
 import consolio.bebop.ui.UIBuilder;
 import consolio.bebop.ui.User;
+import consolio.filesystem.FSPath;
 import consolio.model.Console;
 import consolio.model.Consoles;
 import kiss.I;
@@ -32,27 +35,27 @@ public class Consolio extends Application {
     /** The root model. */
     private final Consoles consoles = I.make(Consoles.class).restore();
 
-    private final TabFolder<Consoles, Console> folder = new TabFolder<>(Consoles.class).minimumCharacters(10)
+    private final TabFolder<Consoles, Console> folder = UI.tab(Consoles.class)
+            .minimumCharacters(10)
             .tabHeight(22)
             .tabText(item -> " " + item.getContext().getName() + " ");
+
+    private final ConsoleView view = new ConsoleView();
 
     /**
      * 
      */
     private Consolio() {
-        // addConsole.to(e -> {
-        // Console console = new Console();
-        // console.setContext(FSPath.locate(I.locate("")));
-        // consoles.add(console);
-        // consoles.store();
-        // });
-
-        whenPress(Key.T).at(folder).to(e -> {
-            System.out.println("Add " + e);
+        whenUserPress(Key.T, With.Ctrl).at(folder).to(e -> {
+            Console console = new Console();
+            console.setContext(FSPath.locate(I.locate("")));
+            consoles.add(console);
+            consoles.store();
         });
 
         when(User.MouseMiddleUp).at(folder).flatMap(folder::selectBy).to(e -> {
             consoles.remove(e);
+            consoles.store();
         });
     }
 
@@ -71,7 +74,7 @@ public class Consolio extends Application {
         return new UIBuilder() {
             {
                 $(folder, consoles, console -> {
-                    System.out.println(console);
+                    $(view);
                 });
             }
         };

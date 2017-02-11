@@ -19,7 +19,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import bebop.input.Key;
 import bebop.ui.AbstractUI;
 import bebop.ui.UIEvent;
 import bebop.util.Resources;
@@ -86,7 +85,6 @@ public class ApplicationWindow<RootModel> implements Extensible {
         AbstractUI rootUI = I.find(AbstractUI.class, modelType);
         rootUI.initialize(shell, model);
 
-        Key.bind(this, rootUI.ui);
         UIEvent.listen(rootUI.ui, this);
 
         // Restore window location and size.

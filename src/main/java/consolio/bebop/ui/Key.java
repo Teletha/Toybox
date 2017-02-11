@@ -13,36 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package bebop.input;
+package consolio.bebop.ui;
 
 import static org.eclipse.swt.SWT.*;
 import static org.eclipse.swt.internal.win32.OS.*;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.VerifyKeyListener;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-
-import bebop.util.SWTUtil;
-import kiss.Table;
-import kiss.model.Model;
 
 /**
- * @version 2011/11/02 15:52:39
+ * @version 2017/02/11 23:09:26
  */
 public enum Key {
+
     /** Virtual Key Code */
     N1('1', '1'),
 
@@ -263,7 +245,7 @@ public enum Key {
     final boolean system;
 
     /** Is this key is extended key? */
-    final boolean extended;
+    public final boolean extended;
 
     /**
      * <p>
@@ -313,154 +295,20 @@ public enum Key {
     }
 
     /**
-     * @param keies A owner of declaring key bindings.
-     * @param control A target widget to bind.
+     * @version 2017/02/11 23:25:49
      */
-    public static void bind(Object keies, Control control) {
-        KeyBindings bindings = SWTUtil.get(control, KeyBindings.class);
+    public static enum With {
+        Alt(SWT.ALT), Ctrl(SWT.CTRL), Shift(SWT.SHIFT);
 
-        if (bindings == null) {
-            bindings = new KeyBindings(control);
-
-            // register
-            SWTUtil.set(control, bindings);
-
-            // register as event listner
-            if (control instanceof StyledText) {
-                ((StyledText) control).addVerifyKeyListener(bindings);
-            } else {
-                control.addListener(KeyDown, bindings);
-            }
-            control.addTraverseListener(bindings);
-        }
-
-        // Collect key binding methods.
-        Table<Method, Annotation> methods = Model.collectAnnotatedMethods(keies.getClass());
-
-        for (Entry<Method, List<Annotation>> entry : methods.entrySet()) {
-            Method method = entry.getKey();
-
-            for (Annotation annotation : entry.getValue()) {
-                if (annotation instanceof KeyBind) {
-                    method.setAccessible(true);
-                    bindings.put(new KeyStroke((KeyBind) annotation), new KeyBinding(keies, method));
-                }
-            }
-        }
-    }
-
-    /**
-     * @version 2012/03/03 21:07:59
-     */
-    @SuppressWarnings("serial")
-    private static class KeyBindings extends HashMap<KeyStroke, KeyBinding> implements Listener, TraverseListener, VerifyKeyListener {
-
-        /** The associated widget. */
-        private final Control control;
+        public final int mask;
 
         /**
-         * @param control
-         */
-        private KeyBindings(Control control) {
-            this.control = control;
-        }
-
-        /**
-         * <p>
-         * Handle key event.
-         * <p>
+         * Hide Constructor.
          * 
-         * @param stroke
+         * @param mask
          */
-        private boolean handle(KeyStroke stroke) {
-            KeyBinding binding = get(stroke);
-
-            if (binding != null) {
-                return binding.invoke();
-            } else {
-                // event bubbling
-                Composite parent = control.getParent();
-
-                if (parent == null) {
-                    return true;
-                } else {
-                    KeyBindings bindings = SWTUtil.get(parent, KeyBindings.class);
-
-                    if (bindings == null) {
-                        return true;
-                    } else {
-                        return bindings.handle(stroke);
-                    }
-                }
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void handleEvent(Event event) {
-            if (event.doit) {
-                event.doit = handle(new KeyStroke(event));
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void verifyKey(VerifyEvent event) {
-            if (event.doit) {
-                event.doit = handle(new KeyStroke(event));
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void keyTraversed(TraverseEvent event) {
-            if (event.doit && (event.detail == TRAVERSE_TAB_NEXT || event.detail == TRAVERSE_TAB_PREVIOUS)) {
-                event.doit = false; // drop traversal event to throw key event for TAB key
-            }
-        }
-    }
-
-    /**
-     * @version 2012/03/03 21:13:54
-     */
-    private static class KeyBinding {
-
-        /** The binding method owner. */
-        private final Object owner;
-
-        /** The binding method. */
-        private final Method binder;
-
-        /**
-         * @param owner
-         * @param binder
-         */
-        private KeyBinding(Object owner, Method binder) {
-            this.owner = owner;
-            this.binder = binder;
-        }
-
-        /**
-         * <p>
-         * Invoke key binding.
-         * </p>
-         * 
-         * @return
-         */
-        private boolean invoke() {
-            try {
-                binder.invoke(owner);
-
-                return false;
-            } catch (Exception e) {
-                return true;
-            }
+        private With(int mask) {
+            this.mask = mask;
         }
     }
 }
