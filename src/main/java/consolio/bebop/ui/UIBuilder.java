@@ -77,7 +77,7 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
 
         private Object model;
 
-        private List<UINode> children = new ArrayList();
+        List<UINode> children = new ArrayList();
 
         /**
          * 

@@ -71,6 +71,32 @@ public abstract class Application {
         shell.forceActive();
     }
 
+    /** The latest UI. */
+    private UIBuilder latest;
+
+    /**
+     * 
+     */
+    protected final void updateView() {
+        UIBuilder ui = virtualize();
+
+        if (latest == null) {
+            latest = ui;
+            ui.materialize(shell);
+        } else {
+            Diff diff = new Diff(latest, ui);
+        }
+    }
+
+    /**
+     * <p>
+     * Virtualize user interface.
+     * </p>
+     * 
+     * @return
+     */
+    protected abstract UIBuilder virtualize();
+
     /**
      * <p>
      * Launch the specified application.

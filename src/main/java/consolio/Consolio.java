@@ -57,6 +57,8 @@ public class Consolio extends Application {
             consoles.remove(e);
             consoles.store();
         });
+
+        consoles.add.merge(consoles.remove).to(this::updateView);
     }
 
     /**
@@ -67,9 +69,13 @@ public class Consolio extends Application {
         shell.setLayout(new FillLayout(SWT.VERTICAL));
         shell.setImage(Resources.getImage(I.locate("icon.ico")));
 
-        virtualize().materialize(shell);
+        updateView();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public UIBuilder virtualize() {
         return new UIBuilder() {
             {

@@ -10,7 +10,6 @@
 package consolio.bebop.ui;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.eclipse.swt.SWT;
@@ -107,28 +106,20 @@ public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelec
      * {@inheritDoc}
      */
     @Override
-    protected Widget materialize(Composite parent, M model) {
+    protected Function<Child, Widget> materialize(Composite parent, M model, Object context) {
         CTabFolder folder = new CTabFolder(parent, SWT.None);
         folder.setMinimumCharacters(minimumCharacters);
         folder.setTabHeight(tabHeight);
 
-        // model change event
-        Consumer<Child> builder = child -> {
+        return child -> {
             CTabItem tab = new CTabItem(folder, SWT.None);
             tab.setText(tabText.apply(child));
             tab.setData(UI.KeyModel, child);
 
             model.remove.take(child::equals).take(1).to(tab::dispose);
+
+            return tab;
         };
-
-        model.add.to(builder);
-
-        // dispose
-        for (Child child : model) {
-            builder.accept(child);
-        }
-
-        return folder;
     }
 
     /**
