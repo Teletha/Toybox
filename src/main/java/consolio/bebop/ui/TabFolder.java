@@ -9,37 +9,33 @@
  */
 package consolio.bebop.ui;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Widget;
+
+import kiss.Events;
 
 /**
  * @version 2017/02/10 10:51:40
  */
-public class TabFolder<T> extends AbstractUI<CTabFolder> {
-
-    /** The tab manager. */
-    private List<Tab> tabs = new CopyOnWriteArrayList();
+public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelectableUI<M, Child> {
 
     /**
-     * @param parent
+     * @param model
      */
-    public TabFolder(Composite parent, Selectable<T> selectable, Function<TabFolder<T>, Function<T, Tab>> itemBuilder) {
-        super(parent, self -> p -> {
-            CTabFolder folder = new CTabFolder(p, SWT.None);
-
-            for (T item : selectable) {
-                Tab tab = itemBuilder.apply(self).apply(item);
-                tab.widget();
-            }
-            return folder;
-        });
+    public TabFolder(Class<M> model) {
     }
+
+    private int minimumCharacters;
 
     /**
      * Sets the minimum number of characters that will be displayed in a fully compressed tab.
@@ -54,10 +50,12 @@ public class TabFolder<T> extends AbstractUI<CTabFolder> {
      *                <li>ERROR_INVALID_RANGE - if the count is less than zero</li>
      *                </ul>
      */
-    public TabFolder<T> minimumCharacters(int count) {
-        widget().setMinimumCharacters(count);
+    public TabFolder<M, Child> minimumCharacters(int count) {
+        this.minimumCharacters = count;
         return this;
     }
+
+    private int tabHeight = -1;
 
     /**
      * Specify a fixed height for the tab items. If no height is specified, the default height is
@@ -73,8 +71,74 @@ public class TabFolder<T> extends AbstractUI<CTabFolder> {
      *                <li>ERROR_INVALID_ARGUMENT - if called with a height of less than 0</li>
      *                </ul>
      */
-    public TabFolder<T> tabHeight(int height) {
-        widget().setTabHeight(height);
+    public TabFolder<M, Child> tabHeight(int height) {
+        this.tabHeight = height;
         return this;
+    }
+
+    private Function<Child, String> tabText = Child::toString;
+
+    /**
+     * <p>
+     * Set tab text.
+     * </p>
+     * 
+     * @param text
+     * @return
+     */
+    public TabFolder<M, Child> tabText(String text) {
+        return tabText(child -> text);
+    }
+
+    /**
+     * <p>
+     * Set tab text.
+     * </p>
+     * 
+     * @param text
+     * @return
+     */
+    public TabFolder<M, Child> tabText(Function<Child, String> text) {
+        this.tabText = Objects.requireNonNull(text);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Widget materialize(Composite parent, M model) {
+        CTabFolder folder = new CTabFolder(parent, SWT.None);
+        folder.setMinimumCharacters(minimumCharacters);
+        folder.setTabHeight(tabHeight);
+
+        // model change event
+        Consumer<Child> builder = child -> {
+            CTabItem tab = new CTabItem(folder, SWT.None);
+            tab.setText(tabText.apply(child));
+            tab.setData(UI.KeyModel, child);
+
+            model.remove.take(child::equals).take(1).to(tab::dispose);
+        };
+
+        model.add.to(builder);
+
+        // dispose
+        for (Child child : model) {
+            builder.accept(child);
+        }
+
+        return folder;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Events<Child> selectBy(Event e) {
+        return Events.from(e.widget)
+                .as(CTabFolder.class)
+                .map(folder -> folder.getItem(new Point(e.x, e.y)))
+                .map(item -> (Child) item.getData(UI.KeyModel));
     }
 }

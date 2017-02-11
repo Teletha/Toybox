@@ -9,6 +9,7 @@
  */
 package consolio.bebop.ui;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.eclipse.swt.widgets.Display;
@@ -26,6 +27,9 @@ public class UI {
 
     /** The UI thread executor. */
     public static final Consumer<Runnable> Thread = Display.getDefault()::asyncExec;
+
+    /** The model key. */
+    static final String KeyModel = UI.class.getName() + "$Model$";
 
     /**
      * <p>
@@ -74,43 +78,19 @@ public class UI {
          * @return An {@link Events} stream.
          */
         public Events<Event> at(AbstractUI ui) {
-            return at(ui.widget());
-        }
-
-        /**
-         * <p>
-         * Locate event source.
-         * </p>
-         * 
-         * @param widget A target {@link Widget}.
-         * @return An {@link Events} stream.
-         */
-        public Events<Event> at(Widget widget) {
             return new Events<>(observer -> {
-                Listener listener = e -> {
-                    observer.accept(e);
+                BiConsumer<User, Event> listener = (user, e) -> {
+                    if (user.condition.test(e)) observer.accept(e);
                 };
 
                 // register
-                widget.addListener(User.KeyDown.type, listener);
+                ui.listeners.push(User.KeyDown, listener);
 
                 // unregister
                 return () -> {
-                    widget.removeListener(User.KeyDown.type, listener);
+                    ui.listeners.pull(User.KeyDown, listener);
                 };
             });
-        }
-
-        /**
-         * <p>
-         * Locate event source.
-         * </p>
-         * 
-         * @param widget A target {@link Widget}.
-         * @return An {@link Events} stream.
-         */
-        public <W extends Widget> Events<W> in(W widget) {
-            return at(widget).mapTo(widget);
         }
     }
 
@@ -127,6 +107,34 @@ public class UI {
          */
         private Locator(User[] actions) {
             this.actions = actions;
+        }
+
+        /**
+         * <p>
+         * Locate event source.
+         * </p>
+         * 
+         * @param ui A target {@link AbstractUI}.
+         * @return An {@link Events} stream.
+         */
+        public Events<Event> at(AbstractUI<?> ui) {
+            return new Events<>(observer -> {
+                BiConsumer<User, Event> listener = (user, e) -> {
+                    if (user.condition.test(e)) observer.accept(e);
+                };
+
+                // register
+                for (User action : actions) {
+                    ui.listeners.push(action, listener);
+                }
+
+                // unregister
+                return () -> {
+                    for (User action : actions) {
+                        ui.listeners.pull(action, listener);
+                    }
+                };
+            });
         }
 
         /**
