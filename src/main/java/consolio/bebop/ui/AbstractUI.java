@@ -42,7 +42,7 @@ public abstract class AbstractUI<M> {
      * @param model A current model.
      * @return A created {@link Widget}.
      */
-    protected abstract Widget materialize(Composite parent, M model);
+    protected abstract Materializable<M> materialize(Composite parent, M model);
 
     /**
      * Build actual ui.
@@ -51,13 +51,13 @@ public abstract class AbstractUI<M> {
      * @param model
      * @return
      */
-    protected final Widget build(Composite parent, M model) {
-        Widget materialized = materialize(parent, model);
+    protected final Materializable<M> build(Composite parent, M model) {
+        Materializable<M> materialized = materialize(parent, model);
 
         for (Entry<User, List<BiConsumer<User, Event>>> entry : listeners.entrySet()) {
             User user = entry.getKey();
 
-            materialized.addListener(user.type, e -> {
+            materialized.widget.addListener(user.type, e -> {
                 e.data = model;
 
                 for (BiConsumer<User, Event> listener : entry.getValue()) {

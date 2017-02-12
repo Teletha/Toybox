@@ -32,12 +32,12 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Widget;
 
 import bebop.input.KeyBind;
 import bebop.util.Resources;
 import consolio.bebop.ui.AbstractUI;
 import consolio.bebop.ui.Key;
+import consolio.bebop.ui.Materializable;
 import consolio.model.Console;
 import consolio.util.NativeProcessListener;
 import kiss.Disposable;
@@ -58,7 +58,7 @@ public class ConsoleView extends AbstractUI<Console> {
      * {@inheritDoc}
      */
     @Override
-    protected Widget materialize(Composite parent, Console model) {
+    protected Materializable materialize(Composite parent, Console model) {
         System.out.println("Materialize ConsoleView " + model + "  " + parent);
         ConsoleText ui = new ConsoleText(parent, model);
         ui.setLineLimit(2000);
@@ -66,7 +66,7 @@ public class ConsoleView extends AbstractUI<Console> {
         // initial text
         ui.writeConsoleText();
 
-        return ui;
+        return null;
     }
 
     private static final Random RANDOM = new Random();

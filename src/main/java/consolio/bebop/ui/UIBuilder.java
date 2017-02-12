@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Widget;
 
 import consolio.bebop.ui.UIBuilder.UINode;
 import kiss.Tree;
@@ -39,12 +38,12 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
     protected final <Model> void $(AbstractUI<Model> ui, Model model) {
         $(ui);
     }
-
-    public void materialize(Composite composite) {
-        for (UINode node : root) {
-            materialize(composite, node);
-        }
-    }
+    //
+    // public void materialize(Composite composite) {
+    // for (UINode node : root) {
+    // materialize(composite, node);
+    // }
+    // }
 
     /**
      * <p>
@@ -55,15 +54,15 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
      * @param node
      */
     private void materialize(Composite parent, UINode node) {
-        Widget widget = node.ui.build(parent, node.model);
-
-        if (widget instanceof Composite) {
-            Composite composite = (Composite) widget;
-
-            for (UINode child : node.children) {
-                materialize(composite, child);
-            }
-        }
+        // Widget widget = node.ui.build(parent, node.model);
+        //
+        // if (widget instanceof Composite) {
+        // Composite composite = (Composite) widget;
+        //
+        // for (UINode child : node.children) {
+        // materialize(composite, child);
+        // }
+        // }
     }
 
     /**
@@ -71,11 +70,11 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
      */
     static class UINode implements Consumer<UINode> {
 
-        private AbstractUI ui;
+        AbstractUI ui;
 
-        private int id;
+        final int id;
 
-        private Object model;
+        Object model;
 
         List<UINode> children = new ArrayList();
 
@@ -86,8 +85,6 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
             this.ui = ui;
             this.id = id;
             this.model = model;
-
-            System.out.println(ui + "  " + id + "   " + model);
         }
 
         /**
@@ -96,6 +93,14 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
         @Override
         public void accept(UINode parent) {
             parent.children.add(this);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return "UINode[ui = " + ui + "  model = " + model + "]";
         }
     }
 

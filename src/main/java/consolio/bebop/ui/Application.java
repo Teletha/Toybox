@@ -72,7 +72,7 @@ public abstract class Application {
     }
 
     /** The latest UI. */
-    private UIBuilder latest;
+    private UIBuilder latest = new UIBuilder();
 
     /**
      * 
@@ -80,11 +80,7 @@ public abstract class Application {
     protected final void updateView() {
         UIBuilder ui = virtualize();
 
-        if (latest == null) {
-            latest = ui;
-            ui.materialize(shell);
-        } else {
-        }
+        Diff.apply(shell, latest, ui);
     }
 
     /**

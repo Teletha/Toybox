@@ -9,8 +9,6 @@
  */
 package consolio.bebop.ui;
 
-import java.util.Objects;
-
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
@@ -36,34 +34,46 @@ public abstract class AbstractSelectableUI<M extends Selectable<Child>, Child> e
      * {@inheritDoc}
      */
     @Override
-    protected final Widget materialize(Composite parent, M model) {
-        Materializer materializer = materialize(parent, model, null);
+    protected final Materializable materialize(Composite parent, M model) {
+        ItemMaterializer<M, Child> materializer = materialize(parent, model, null);
 
-        model.add.to(item -> materializer.create(item));
+        model.add.to(item -> materializer.createItem(item, materializer.size()));
 
         for (Child child : model) {
-            materializer.create(child);
+            Widget item = materializer.createItem(child, materializer.size());
         }
-        return materializer.widget;
+        return materializer;
     }
 
-    protected abstract Materializer materialize(Composite parent, M model, Object context);
+    protected abstract ItemMaterializer materialize(Composite parent, M model, Object context);
 
     /**
      * @version 2017/02/12 9:25:53
      */
-    protected abstract class Materializer {
+    protected abstract class ItemMaterializer<M, Child> extends Materializable<M> {
 
-        private final Widget widget;
+        protected final M model;
 
-        protected Materializer(Widget widget) {
-            this.widget = Objects.requireNonNull(widget);
+        protected ItemMaterializer(Widget widget, M model) {
+            super(widget);
+
+            this.model = model;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Widget create(M model, int index) {
+            return widget;
         }
 
         protected abstract Widget[] items();
 
+        protected abstract int size();
+
         protected abstract Widget item(int index);
 
-        protected abstract Widget create(Child childMode);
+        protected abstract Widget createItem(Child model, int index);
     }
 }

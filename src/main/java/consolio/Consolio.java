@@ -50,12 +50,10 @@ public class Consolio extends Application {
             Console console = new Console();
             console.setContext(FSPath.locate(I.locate("")));
             consoles.add(console);
-            consoles.store();
         });
 
         when(User.MouseMiddleUp).at(folder).flatMap(folder::selectBy).to(e -> {
             consoles.remove(e);
-            consoles.store();
         });
 
         consoles.add.merge(consoles.remove).to(this::updateView);
