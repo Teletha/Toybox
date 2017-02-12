@@ -59,13 +59,14 @@ public class ConsoleView extends AbstractUI<Console> {
      */
     @Override
     protected Materializer createMaterializer(Composite parent, Console model) {
-        ConsoleText ui = new ConsoleText(parent, model);
+        ConsoleText ui = I.make(ConsoleText.class);
+        ui.initialize(parent, model);
         ui.setLineLimit(2000);
 
         // initial text
         ui.writeConsoleText();
 
-        return new Materializer(ui);
+        return new Materializer(ui.ui);
     }
 
     private static final Random RANDOM = new Random();
@@ -77,7 +78,7 @@ public class ConsoleView extends AbstractUI<Console> {
     /**
      * @version 2017/02/12 0:10:00
      */
-    public class ConsoleText extends StyledText implements VerifyKeyListener, NativeProcessListener {
+    public class ConsoleText implements VerifyKeyListener, NativeProcessListener {
 
         /** The line limiter. */
         private final LineLimiter limiter = new LineLimiter();
@@ -102,31 +103,21 @@ public class ConsoleView extends AbstractUI<Console> {
         /** The current processing task. */
         private Disposable currentTask;
 
+        private StyledText ui;
+
         private Console model;
 
-        /**
-         * @param parent
-         * @param style
-         */
-        private ConsoleText(Composite parent, Console model) {
-            super(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-
+        private void initialize(Composite parent, Console mode) {
+            this.ui = new StyledText(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
             this.model = model;
-            setLineSpacing(1);
-            addVerifyKeyListener(this);
-            addListener(SWT.MouseDoubleClick, detector);
+            ui.setLineSpacing(1);
+            ui.addVerifyKeyListener(this);
+            ui.addListener(SWT.MouseDoubleClick, detector);
 
-            whenUserPress(Key.End).at(this).to(this::end);
-            whenUserPress(Key.Home).at(this).to(this::home);
-            whenUserPress(Key.Up).at(this).to(this::up);
-            whenUserPress(Key.Down).at(this).to(this::down);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        protected void checkSubclass() {
+            whenUserPress(Key.End).at(ui).to(this::end);
+            whenUserPress(Key.Home).at(ui).to(this::home);
+            whenUserPress(Key.Up).at(ui).to(this::up);
+            whenUserPress(Key.Down).at(ui).to(this::down);
         }
 
         /**
@@ -141,27 +132,27 @@ public class ConsoleView extends AbstractUI<Console> {
         }
 
         public void end() {
-            setTopIndex(getLineCount() - 1);
+            ui.setTopIndex(ui.getLineCount() - 1);
         }
 
         public void home() {
-            setTopIndex(0);
+            ui.setTopIndex(0);
         }
 
         public void up() {
-            replaceTextRange(caretStartPosition, getCharCount() - caretStartPosition, manager.prev());
+            ui.replaceTextRange(caretStartPosition, ui.getCharCount() - caretStartPosition, manager.prev());
 
             // move caret to the end of previous command message
-            setCaretOffset(getCharCount());
+            ui.setCaretOffset(ui.getCharCount());
 
             end();
         }
 
         public void down() {
-            replaceTextRange(caretStartPosition, getCharCount() - caretStartPosition, manager.next());
+            ui.replaceTextRange(caretStartPosition, ui.getCharCount() - caretStartPosition, manager.next());
 
             // move caret to the end of next command message
-            setCaretOffset(getCharCount());
+            ui.setCaretOffset(ui.getCharCount());
 
             end();
         }
@@ -179,7 +170,7 @@ public class ConsoleView extends AbstractUI<Console> {
          */
         @Override
         public void verifyKey(VerifyEvent event) {
-            if (getSelectionCount() != 0) {
+            if (ui.getSelectionCount() != 0) {
                 return;
             }
 
@@ -187,18 +178,18 @@ public class ConsoleView extends AbstractUI<Console> {
             case SWT.PAGE_UP:
                 event.doit = false;
 
-                setTopPixel(getTopPixel() - getClientArea().height);
+                ui.setTopPixel(ui.getTopPixel() - ui.getClientArea().height);
                 break;
 
             case SWT.PAGE_DOWN:
                 event.doit = false;
 
-                setTopPixel(getTopPixel() + getClientArea().height);
+                ui.setTopPixel(ui.getTopPixel() + ui.getClientArea().height);
                 break;
 
             case SWT.BS:
             case SWT.ARROW_LEFT:
-                if (getCaretOffset() <= caretStartPosition) {
+                if (ui.getCaretOffset() <= caretStartPosition) {
                     event.doit = false;
                 }
                 break;
@@ -207,14 +198,14 @@ public class ConsoleView extends AbstractUI<Console> {
                 event.doit = false;
 
                 // retrive user input
-                String input = getTextRange(caretStartPosition, getCharCount() - caretStartPosition).trim();
+                String input = ui.getTextRange(caretStartPosition, ui.getCharCount() - caretStartPosition).trim();
 
                 if (editable) {
                     if (input.length() != 0) {
                         // disable this console interface
                         disableConsole();
 
-                        append("\r\n");
+                        ui.append("\r\n");
                         caretStartPosition += input.length() + 2;
 
                         // execute task
@@ -229,8 +220,8 @@ public class ConsoleView extends AbstractUI<Console> {
 
             default:
                 // check caret position
-                if (getCaretOffset() < caretStartPosition) {
-                    setCaretOffset(getCharCount());
+                if (ui.getCaretOffset() < caretStartPosition) {
+                    ui.setCaretOffset(ui.getCharCount());
                 }
                 break;
             }
@@ -272,25 +263,25 @@ public class ConsoleView extends AbstractUI<Console> {
          */
         public void write(CharSequence message) {
             // should we keep bottom line?
-            if (getLineIndex(getClientArea().height) == getLineCount() - 1) {
+            if (ui.getLineIndex(ui.getClientArea().height) == ui.getLineCount() - 1) {
                 if (!keeper.use) {
                     keeper.use = true;
-                    addListener(SWT.Modify, keeper);
+                    ui.addListener(SWT.Modify, keeper);
                 }
             } else {
                 if (keeper.use) {
                     keeper.use = false;
-                    removeListener(SWT.Modify, keeper);
+                    ui.removeListener(SWT.Modify, keeper);
                 }
             }
 
             // append actual text
             if (0 <= carriageReturned) {
-                replaceTextRange(carriageReturned, getCharCount() - carriageReturned, message.toString());
+                ui.replaceTextRange(carriageReturned, ui.getCharCount() - carriageReturned, message.toString());
                 caretStartPosition = carriageReturned + message.length();
                 carriageReturned = -1;
             } else {
-                replaceTextRange(caretStartPosition, 0, message.toString());
+                ui.replaceTextRange(caretStartPosition, 0, message.toString());
                 caretStartPosition += message.length();
             }
 
@@ -305,15 +296,15 @@ public class ConsoleView extends AbstractUI<Console> {
             }
 
             if (index != 0) {
-                GC canvas = new GC(this);
+                GC canvas = new GC(ui);
                 int width = canvas.textExtent(message.subSequence(0, index).toString()).y;
                 canvas.dispose();
 
-                setLineWrapIndent(getLineCount() - 2, 1, width);
+                ui.setLineWrapIndent(ui.getLineCount() - 2, 1, width);
             }
 
             if (message.length() != 0 && message.charAt(message.length() - 1) == '\r') {
-                carriageReturned = getOffsetAtLine(getLineCount() - 2);
+                carriageReturned = ui.getOffsetAtLine(ui.getLineCount() - 2);
             }
 
             // start URI pattern matching
@@ -328,7 +319,7 @@ public class ConsoleView extends AbstractUI<Console> {
                 style.underlineStyle = SWT.UNDERLINE_LINK;
                 style.data = link;
 
-                setStyleRange(style);
+                ui.setStyleRange(style);
             }
         }
 
@@ -383,9 +374,9 @@ public class ConsoleView extends AbstractUI<Console> {
             if (0 < size) {
                 limiter.limit = size;
 
-                addExtendedModifyListener(limiter);
+                ui.addExtendedModifyListener(limiter);
             } else {
-                removeExtendedModifyListener(limiter);
+                ui.removeExtendedModifyListener(limiter);
             }
         }
 
@@ -397,10 +388,10 @@ public class ConsoleView extends AbstractUI<Console> {
             editable = true;
 
             // update caret
-            getCaret().setVisible(true);
+            ui.getCaret().setVisible(true);
 
             // update caret position
-            setCaretOffset(getCharCount());
+            ui.setCaretOffset(ui.getCharCount());
         }
 
         /**
@@ -411,7 +402,7 @@ public class ConsoleView extends AbstractUI<Console> {
             editable = false;
 
             // update caret
-            getCaret().setVisible(false);
+            ui.getCaret().setVisible(false);
         }
 
         /**
@@ -419,7 +410,7 @@ public class ConsoleView extends AbstractUI<Console> {
          */
         protected void writeConsoleText() {
             // create console text
-            write(getCharCount() == 0 ? "$ " : "\r\n$ ");
+            write(ui.getCharCount() == 0 ? "$ " : "\r\n$ ");
 
             // open console
             enableConsole();
@@ -436,7 +427,7 @@ public class ConsoleView extends AbstractUI<Console> {
             @Override
             public void handleEvent(Event event) {
                 try {
-                    StyleRange style = getStyleRangeAtOffset(getOffsetAtLocation(new Point(event.x, event.y)));
+                    StyleRange style = ui.getStyleRangeAtOffset(ui.getOffsetAtLocation(new Point(event.x, event.y)));
 
                     if (style != null && style.underlineStyle == SWT.UNDERLINE_LINK) {
                         Desktop.getDesktop().browse(new URI((String) style.data));
@@ -460,12 +451,12 @@ public class ConsoleView extends AbstractUI<Console> {
              */
             @Override
             public void modifyText(ExtendedModifyEvent event) {
-                int top = getTopIndex();
+                int top = ui.getTopIndex();
 
-                while (limit < getLineCount()) {
+                while (limit < ui.getLineCount()) {
 
-                    int removeSize = getLine(0).length() + getLineDelimiter().length();
-                    replaceTextRange(0, removeSize, "");
+                    int removeSize = ui.getLine(0).length() + ui.getLineDelimiter().length();
+                    ui.replaceTextRange(0, removeSize, "");
 
                     // update caret position
                     caretStartPosition -= removeSize;
@@ -473,7 +464,7 @@ public class ConsoleView extends AbstractUI<Console> {
                     // and current line position
                     top--;
                 }
-                setTopIndex(top);
+                ui.setTopIndex(top);
             }
         }
 
@@ -490,7 +481,7 @@ public class ConsoleView extends AbstractUI<Console> {
              */
             @Override
             public void handleEvent(Event event) {
-                setTopIndex(getLineCount() - 1);
+                ui.setTopIndex(ui.getLineCount() - 1);
             }
         }
     }
