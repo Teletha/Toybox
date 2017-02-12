@@ -106,19 +106,42 @@ public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelec
      * {@inheritDoc}
      */
     @Override
-    protected Function<Child, Widget> materialize(Composite parent, M model, Object context) {
+    protected Materializer materialize(Composite parent, M model, Object context) {
         CTabFolder folder = new CTabFolder(parent, SWT.None);
         folder.setMinimumCharacters(minimumCharacters);
         folder.setTabHeight(tabHeight);
 
-        return child -> {
-            CTabItem tab = new CTabItem(folder, SWT.None);
-            tab.setText(tabText.apply(child));
-            tab.setData(UI.KeyModel, child);
+        return new Materializer(folder) {
 
-            model.remove.take(child::equals).take(1).to(tab::dispose);
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            protected Widget[] items() {
+                return folder.getItems();
+            }
 
-            return tab;
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            protected Widget item(int index) {
+                return folder.getItem(index);
+            }
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            protected Widget create(Child childMode) {
+                CTabItem tab = new CTabItem(folder, SWT.None);
+                tab.setText(tabText.apply(childMode));
+                tab.setData(UI.KeyModel, childMode);
+
+                model.remove.take(childMode::equals).take(1).to(tab::dispose);
+
+                return tab;
+            }
         };
     }
 

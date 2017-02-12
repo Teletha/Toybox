@@ -17,13 +17,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
-import kiss.I;
 import kiss.Table;
 
 /**
  * @version 2017/02/11 23:12:07
  */
-public abstract class AbstractUI<M> implements Cloneable {
+public abstract class AbstractUI<M> {
 
     final Table<User, BiConsumer<User, Event>> listeners = new Table();
 
@@ -32,18 +31,6 @@ public abstract class AbstractUI<M> implements Cloneable {
      * @param builder
      */
     protected AbstractUI() {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public AbstractUI clone() {
-        try {
-            return (AbstractUI) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw I.quiet(e);
-        }
     }
 
     /**

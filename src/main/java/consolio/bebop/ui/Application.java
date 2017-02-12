@@ -84,7 +84,6 @@ public abstract class Application {
             latest = ui;
             ui.materialize(shell);
         } else {
-            Diff diff = new Diff(latest, ui);
         }
     }
 

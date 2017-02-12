@@ -9,7 +9,7 @@
  */
 package consolio.bebop.ui;
 
-import java.util.function.Function;
+import java.util.Objects;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -37,15 +37,33 @@ public abstract class AbstractSelectableUI<M extends Selectable<Child>, Child> e
      */
     @Override
     protected final Widget materialize(Composite parent, M model) {
-        Function<Child, Widget> materializer = materialize(parent, model, null);
+        Materializer materializer = materialize(parent, model, null);
 
-        model.add.to(item -> materializer.apply(item));
+        model.add.to(item -> materializer.create(item));
 
         for (Child child : model) {
-            materializer.apply(child);
+            materializer.create(child);
         }
-        return null;
+        return materializer.widget;
     }
 
-    protected abstract Function<Child, Widget> materialize(Composite parent, M model, Object context);
+    protected abstract Materializer materialize(Composite parent, M model, Object context);
+
+    /**
+     * @version 2017/02/12 9:25:53
+     */
+    protected abstract class Materializer {
+
+        private final Widget widget;
+
+        protected Materializer(Widget widget) {
+            this.widget = Objects.requireNonNull(widget);
+        }
+
+        protected abstract Widget[] items();
+
+        protected abstract Widget item(int index);
+
+        protected abstract Widget create(Child childMode);
+    }
 }
