@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import bebop.InUIThread;
 import bebop.input.KeyBind;
 import bebop.util.Resources;
 import consolio.bebop.ui.AbstractUI;
@@ -107,7 +108,7 @@ public class ConsoleView extends AbstractUI<Console> {
 
         private Console model;
 
-        private void initialize(Composite parent, Console mode) {
+        private void initialize(Composite parent, Console model) {
             this.ui = new StyledText(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
             this.model = model;
             ui.setLineSpacing(1);
@@ -241,6 +242,7 @@ public class ConsoleView extends AbstractUI<Console> {
          * {@inheritDoc}
          */
         @Override
+        @InUIThread
         public void message(String message, String eol) {
             write(message + eol);
         }
@@ -408,6 +410,7 @@ public class ConsoleView extends AbstractUI<Console> {
         /**
          * Helper method to write system message.
          */
+        @InUIThread
         protected void writeConsoleText() {
             // create console text
             write(ui.getCharCount() == 0 ? "$ " : "\r\n$ ");

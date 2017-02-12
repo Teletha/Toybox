@@ -64,7 +64,6 @@ public class TaskManager {
     @InWorkerThread
     Disposable execute(Console console, ConsoleText ui, String input) {
         addHistory(input);
-
         return NativeProcess.execute(input, console.getContext().toPath(), ui);
     }
 
