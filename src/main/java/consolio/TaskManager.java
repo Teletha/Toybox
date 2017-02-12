@@ -12,20 +12,16 @@ package consolio;
 import java.util.ArrayList;
 import java.util.List;
 
-import bebop.InUIThread;
 import bebop.InWorkerThread;
 import consolio.ConsoleView.ConsoleText;
-import consolio.cli.Command;
-import consolio.cli.CommandLine;
 import consolio.model.Console;
 import consolio.util.NativeProcess;
 import kiss.Disposable;
-import kiss.I;
 import kiss.Manageable;
 import kiss.Preference;
 
 /**
- * @version 2013/01/07 2:06:21
+ * @version 2017/02/13 8:14:34
  */
 @Manageable(lifestyle = Preference.class)
 public class TaskManager {
@@ -65,21 +61,11 @@ public class TaskManager {
      * @param ui
      * @param input
      */
+    @InWorkerThread
     Disposable execute(Console console, ConsoleText ui, String input) {
         addHistory(input);
 
-        Command command = CommandLine.parse(input);
-
-        if (command != null && command instanceof Task) {
-            // toybox command
-            ToyboxTask task = I.make(ToyboxTask.class);
-            task.set(console, ui, (Task) command);
-
-            return task;
-        } else {
-            // native command
-            return NativeProcess.execute(input, console.getContext().toPath(), ui);
-        }
+        return NativeProcess.execute(input, console.getContext().toPath(), ui);
     }
 
     /**
@@ -147,51 +133,5 @@ public class TaskManager {
         }
 
         return history.get(historyIndex);
-    }
-
-    /**
-     * @version 2011/12/02 0:20:47
-     */
-    private static class ToyboxTask implements Disposable {
-
-        /** The actual task. */
-        private Task command;
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void dispose() {
-        }
-
-        /**
-         * @param ui
-         * @param command
-         */
-        private void set(Console console, ConsoleText ui, Task command) {
-            this.command = command;
-            this.command.console = console;
-            this.command.ui = ui;
-
-            work();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @InWorkerThread
-        protected void work() {
-            command.execute(null);
-
-            done();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @InUIThread
-        protected void done() {
-            command.ui.writeConsoleText();
-        }
     }
 }

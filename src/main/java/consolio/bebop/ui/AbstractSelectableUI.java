@@ -34,23 +34,20 @@ public abstract class AbstractSelectableUI<M extends Selectable<Child>, Child> e
      * {@inheritDoc}
      */
     @Override
-    protected final Materializable materialize(Composite parent, M model) {
-        ItemMaterializer<M, Child> materializer = materialize(parent, model, null);
+    protected final Materializer createMaterializer(Composite parent, M model) {
+        ItemMaterializer<M, Child> materializer = materialize2(parent, model);
 
         model.add.to(item -> materializer.createItem(item, materializer.size()));
 
-        for (Child child : model) {
-            Widget item = materializer.createItem(child, materializer.size());
-        }
         return materializer;
     }
 
-    protected abstract ItemMaterializer materialize(Composite parent, M model, Object context);
+    protected abstract ItemMaterializer materialize2(Composite parent, M model);
 
     /**
      * @version 2017/02/12 9:25:53
      */
-    protected abstract class ItemMaterializer<M, Child> extends Materializable<M> {
+    protected abstract class ItemMaterializer<M, Child> extends Materializer<M> {
 
         protected final M model;
 
@@ -58,14 +55,6 @@ public abstract class AbstractSelectableUI<M extends Selectable<Child>, Child> e
             super(widget);
 
             this.model = model;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Widget create(M model, int index) {
-            return widget;
         }
 
         protected abstract Widget[] items();

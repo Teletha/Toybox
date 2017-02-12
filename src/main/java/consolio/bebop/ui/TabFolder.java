@@ -9,7 +9,9 @@
  */
 package consolio.bebop.ui;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import org.eclipse.swt.SWT;
@@ -17,10 +19,12 @@ import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
+import consolio.bebop.ui.UIBuilder.UINode;
 import kiss.Events;
 
 /**
@@ -106,7 +110,7 @@ public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelec
      * {@inheritDoc}
      */
     @Override
-    protected ItemMaterializer materialize(Composite parent, M model, Object context) {
+    protected ItemMaterializer materialize2(Composite parent, M model) {
         CTabFolder folder = new CTabFolder(parent, SWT.None);
         folder.setMinimumCharacters(minimumCharacters);
         folder.setTabHeight(tabHeight);
@@ -142,13 +146,28 @@ public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelec
              */
             @Override
             protected Widget createItem(Child model, int index) {
+                Composite proxy = new Composite(folder, SWT.None);
+                proxy.setLayout(new FillLayout());
+
                 CTabItem tab = new CTabItem(folder, SWT.None, index == -1 ? size() : index);
                 tab.setText(tabText.apply(model));
                 tab.setData(UI.KeyModel, model);
 
                 this.model.remove.take(model::equals).take(1).to(tab::dispose);
 
-                return tab;
+                tab.setControl(proxy);
+
+                return proxy;
+            }
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            void materializeChildren(List<UINode> children, BiConsumer<Composite, UINode> process) {
+                for (UINode child : children) {
+                    process.accept((Composite) createItem((Child) child.model, -1), child);
+                }
             }
         };
     }

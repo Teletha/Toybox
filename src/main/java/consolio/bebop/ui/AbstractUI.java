@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
+import consolio.bebop.ui.UIBuilder.UINode;
 import kiss.Table;
 
 /**
@@ -42,22 +43,22 @@ public abstract class AbstractUI<M> {
      * @param model A current model.
      * @return A created {@link Widget}.
      */
-    protected abstract Materializable<M> materialize(Composite parent, M model);
+    protected abstract Materializer<M> createMaterializer(Composite parent, M model);
 
     /**
-     * Build actual ui.
+     * Build actual SWT widget.
      * 
-     * @param parent
-     * @param model
+     * @param parent A parent {@link Composite}.
+     * @param model An associated model for this UI.
      * @return
      */
-    protected final Materializable<M> build(Composite parent, M model) {
-        Materializable<M> materialized = materialize(parent, model);
+    protected final void materialize(Composite parent, M model, List<UINode> children) {
+        Materializer<M> materializer = createMaterializer(parent, model);
 
         for (Entry<User, List<BiConsumer<User, Event>>> entry : listeners.entrySet()) {
             User user = entry.getKey();
 
-            materialized.widget.addListener(user.type, e -> {
+            materializer.widget.addListener(user.type, e -> {
                 e.data = model;
 
                 for (BiConsumer<User, Event> listener : entry.getValue()) {
@@ -65,6 +66,9 @@ public abstract class AbstractUI<M> {
                 }
             });
         }
-        return materialized;
+
+        materializer.materializeChildren(children, (composite, child) -> {
+            child.ui.materialize(composite, child.model, child.children);
+        });
     }
 }

@@ -70,7 +70,7 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
      */
     static class UINode implements Consumer<UINode> {
 
-        AbstractUI ui;
+        final AbstractUI ui;
 
         final int id;
 

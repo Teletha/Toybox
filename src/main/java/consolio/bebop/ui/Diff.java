@@ -191,8 +191,7 @@ class Diff {
          */
         @Override
         public void run() {
-            Materializable materializable = child.ui.build(parent, child.model);
-            materializable.create(child.model, index);
+            child.ui.materialize(parent, child.model, child.children);
         }
 
         /**

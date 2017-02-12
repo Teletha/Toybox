@@ -37,7 +37,7 @@ import bebop.input.KeyBind;
 import bebop.util.Resources;
 import consolio.bebop.ui.AbstractUI;
 import consolio.bebop.ui.Key;
-import consolio.bebop.ui.Materializable;
+import consolio.bebop.ui.Materializer;
 import consolio.model.Console;
 import consolio.util.NativeProcessListener;
 import kiss.Disposable;
@@ -58,15 +58,14 @@ public class ConsoleView extends AbstractUI<Console> {
      * {@inheritDoc}
      */
     @Override
-    protected Materializable materialize(Composite parent, Console model) {
-        System.out.println("Materialize ConsoleView " + model + "  " + parent);
+    protected Materializer createMaterializer(Composite parent, Console model) {
         ConsoleText ui = new ConsoleText(parent, model);
         ui.setLineLimit(2000);
 
         // initial text
         ui.writeConsoleText();
 
-        return null;
+        return new Materializer(ui);
     }
 
     private static final Random RANDOM = new Random();

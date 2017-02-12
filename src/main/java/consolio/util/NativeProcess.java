@@ -23,7 +23,6 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 
-import bebop.InWorkerThread;
 import kiss.Disposable;
 import kiss.I;
 
@@ -131,7 +130,6 @@ public class NativeProcess implements Disposable {
      * Read process output.
      * </p>
      */
-    @InWorkerThread
     protected void read() {
         Reader reader = null;
 

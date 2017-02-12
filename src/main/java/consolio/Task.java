@@ -10,13 +10,12 @@
 package consolio;
 
 import consolio.ConsoleView.ConsoleText;
-import consolio.cli.Command;
 import consolio.model.Console;
 
 /**
- * @version 2012/03/03 0:07:06
+ * @version 2017/02/13 8:14:42
  */
-public abstract class Task implements Command<ConsoleUI> {
+public abstract class Task {
 
     /** The associated console. */
     protected Console console;
@@ -27,8 +26,7 @@ public abstract class Task implements Command<ConsoleUI> {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public final void execute(ConsoleUI context) {
+    public final void execute(ConsoleText context) {
         execute();
     }
 
