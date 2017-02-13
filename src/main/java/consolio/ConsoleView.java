@@ -93,7 +93,7 @@ public class ConsoleView extends AbstractUI<Console> {
         private int caretStartPosition = 0;
 
         /** The command manager. */
-        private TaskManager manager = I.make(TaskManager.class);
+        private TaskManager manager = I.make(TaskManager.class).restore();
 
         /** The state. */
         private boolean editable = true;

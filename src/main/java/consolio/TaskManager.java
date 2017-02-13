@@ -14,17 +14,15 @@ import java.util.List;
 
 import bebop.InWorkerThread;
 import consolio.ConsoleView.ConsoleText;
+import consolio.bebop.ui.Configurable;
 import consolio.model.Console;
 import consolio.util.NativeProcess;
 import kiss.Disposable;
-import kiss.Manageable;
-import kiss.Preference;
 
 /**
- * @version 2017/02/13 8:14:34
+ * @version 2017/02/13 9:20:03
  */
-@Manageable(lifestyle = Preference.class)
-public class TaskManager {
+public class TaskManager implements Configurable<TaskManager> {
 
     /** The command history. */
     private List<String> history = new ArrayList();
@@ -33,7 +31,7 @@ public class TaskManager {
     private int historyIndex = 0;
 
     /**
-     * Get the history property of this {@link ToyboxConfiguration}.
+     * Get the history property of this {@link TaskManager}.
      * 
      * @return The history property.
      */
@@ -42,7 +40,7 @@ public class TaskManager {
     }
 
     /**
-     * Set the history property of this {@link ToyboxConfiguration}.
+     * Set the history property of this {@link TaskManager}.
      * 
      * @param history The history value to set.
      */
@@ -95,6 +93,8 @@ public class TaskManager {
 
         // add history
         history.add(task);
+
+        store();
     }
 
     /**
