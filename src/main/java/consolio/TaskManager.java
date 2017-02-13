@@ -12,7 +12,7 @@ package consolio;
 import java.util.ArrayList;
 import java.util.List;
 
-import consolio.ConsoleView.ConsoleText;
+import consolio.UIConsole.ConsoleText;
 import consolio.bebop.task.NativeProcess;
 import consolio.bebop.task.Worker;
 import consolio.bebop.ui.Configurable;

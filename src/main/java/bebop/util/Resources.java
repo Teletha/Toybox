@@ -30,8 +30,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileSystemView;
 
-import kiss.I;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -42,8 +40,9 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 
-import bebop.Application;
+import kiss.I;
 
 /**
  * @version 2011/11/17 21:40:06
@@ -133,7 +132,7 @@ public class Resources {
         Color color = colors.get(hash);
 
         if (color == null) {
-            color = new Color(Application.display, red, green, blue);
+            color = new Color(Display.getDefault(), red, green, blue);
             colors.put(hash, color);
         }
         return color;
@@ -164,7 +163,7 @@ public class Resources {
         Font font = fonts.get(data);
 
         if (font == null) {
-            font = new Font(Application.display, data);
+            font = new Font(Display.getDefault(), data);
             fonts.put(data, font);
         }
 
@@ -197,7 +196,7 @@ public class Resources {
         Font font = fonts.get(data);
 
         if (font == null) {
-            font = new Font(Application.display, data);
+            font = new Font(Display.getDefault(), data);
             fonts.put(data, font);
         }
 
@@ -351,7 +350,7 @@ public class Resources {
                     }
                 }
             }
-            return new Image(Application.display, data);
+            return new Image(Display.getDefault(), data);
         } else {
             IndexColorModel model = (IndexColorModel) colorModel;
             int size = model.getMapSize();
@@ -381,7 +380,7 @@ public class Resources {
                     data.setPixel(x, y, pixel[0]);
                 }
             }
-            return new Image(Application.display, data);
+            return new Image(Display.getDefault(), data);
         }
     }
 
@@ -412,7 +411,7 @@ public class Resources {
         Image scaled = images.get(info);
 
         if ((scaled == null || scaled.isDisposed()) && Files.exists(path)) {
-            Image original = new Image(Application.display, new ImageData(path.toAbsolutePath().toString()));
+            Image original = new Image(Display.getDefault(), new ImageData(path.toAbsolutePath().toString()));
             Rectangle originalSize = original.getBounds();
             Rectangle scaledSize;
 
@@ -433,7 +432,7 @@ public class Resources {
             }
 
             // create scaled image
-            scaled = new Image(Application.display, size);
+            scaled = new Image(Display.getDefault(), size);
 
             // write scaled image
             GC canvas = new GC(scaled);

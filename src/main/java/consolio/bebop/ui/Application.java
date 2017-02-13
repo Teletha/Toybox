@@ -23,10 +23,13 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.Objects;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import bebop.util.Resources;
 import kiss.I;
 
 /**
@@ -51,14 +54,16 @@ public abstract class Application {
      * Start this application.
      * </p>
      */
-    public abstract void start();
+    public void start() {
+        updateView();
+    }
 
     /**
      * <p>
      * Stop this application.
      * </p>
      */
-    public final void stop() {
+    public void stop() {
         terminate = true;
     }
 
@@ -263,6 +268,8 @@ public abstract class Application {
          */
         private void initialize() {
             Shell shell = application.shell;
+            shell.setLayout(new FillLayout(SWT.VERTICAL));
+            shell.setImage(Resources.getImage(I.locate("icon.ico")));
 
             // initialize application's common abilities
             I.make(WindowPreference.class).restore().size(shell);

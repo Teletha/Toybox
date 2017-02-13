@@ -56,13 +56,13 @@ public class UI {
 
     /**
      * <p>
-     * Create {@link TabFolder}.
+     * Create {@link UITab}.
      * </p>
      * 
-     * @return A new {@link TabFolder}.
+     * @return A new {@link UITab}.
      */
-    public static <M extends Selectable<C>, C> TabFolder<M, C> tab(Class<M> type) {
-        return new TabFolder();
+    public static <M extends Selectable<C>, C> UITab<M, C> tab(Class<M> type) {
+        return new UITab();
     }
 
     /**

@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-import bebop.input.KeyBind;
 import bebop.util.Resources;
 import consolio.bebop.task.NativeProcessListener;
 import consolio.bebop.ui.AbstractUI;
@@ -46,12 +45,27 @@ import kiss.I;
 /**
  * @version 2017/02/11 23:58:28
  */
-public class ConsoleView extends AbstractUI<Console> {
+public class UIConsole extends AbstractUI<Console> {
 
     /**
      * 
      */
-    public ConsoleView() {
+    public UIConsole() {
+    }
+
+    private int lineLimit = 2000;
+
+    /**
+     * <p>
+     * Set limit of lines.
+     * </p>
+     * 
+     * @param size A limit of lines.
+     * @return Chainable API.
+     */
+    public UIConsole lineLimit(int size) {
+        this.lineLimit = 0 < size ? size : Integer.MAX_VALUE;
+        return this;
     }
 
     /**
@@ -61,7 +75,6 @@ public class ConsoleView extends AbstractUI<Console> {
     protected Materializer createMaterializer(Composite parent, Console model) {
         ConsoleText ui = I.make(ConsoleText.class);
         ui.initialize(parent, model);
-        ui.setLineLimit(2000);
 
         // initial text
         ui.writeConsoleText();
@@ -78,10 +91,10 @@ public class ConsoleView extends AbstractUI<Console> {
     /**
      * @version 2017/02/12 0:10:00
      */
-    public class ConsoleText implements VerifyKeyListener, NativeProcessListener {
+    class ConsoleText implements VerifyKeyListener, NativeProcessListener {
 
         /** The line limiter. */
-        private final LineLimiter limiter = new LineLimiter();
+        private final LineLimiter lineLimiter = new LineLimiter();
 
         /** The URL detector. */
         private final URIDetector detector = new URIDetector();
@@ -113,6 +126,7 @@ public class ConsoleView extends AbstractUI<Console> {
             ui.setLineSpacing(1);
             ui.addVerifyKeyListener(this);
             ui.addListener(SWT.MouseDoubleClick, detector);
+            ui.addExtendedModifyListener(lineLimiter);
 
             whenUserPress(Key.End).at(ui).to(this::end);
             whenUserPress(Key.Home).at(ui).to(this::home);
@@ -157,7 +171,6 @@ public class ConsoleView extends AbstractUI<Console> {
             end();
         }
 
-        @KeyBind(key = Key.C, ctrl = true)
         public void terminate() {
             if (currentTask != null) {
                 currentTask.dispose();
@@ -367,23 +380,6 @@ public class ConsoleView extends AbstractUI<Console> {
         }
 
         /**
-         * <p>
-         * Set line limit size.
-         * </p>
-         * 
-         * @param size
-         */
-        public void setLineLimit(int size) {
-            if (0 < size) {
-                limiter.limit = size;
-
-                ui.addExtendedModifyListener(limiter);
-            } else {
-                ui.removeExtendedModifyListener(limiter);
-            }
-        }
-
-        /**
          * Make this console acceptable from user input.
          */
         private void enableConsole() {
@@ -422,7 +418,7 @@ public class ConsoleView extends AbstractUI<Console> {
         }
 
         /**
-         * @version 2011/12/04 1:18:57
+         * @version 2017/02/13 13:22:34
          */
         private class URIDetector implements Listener {
 
@@ -444,12 +440,9 @@ public class ConsoleView extends AbstractUI<Console> {
         }
 
         /**
-         * @version 2011/12/04 0:57:15
+         * @version 2017/02/13 13:22:26
          */
         private class LineLimiter implements ExtendedModifyListener {
-
-            /** The line limit size. */
-            private int limit;
 
             /**
              * {@inheritDoc}
@@ -458,7 +451,7 @@ public class ConsoleView extends AbstractUI<Console> {
             public void modifyText(ExtendedModifyEvent event) {
                 int top = ui.getTopIndex();
 
-                while (limit < ui.getLineCount()) {
+                while (lineLimit < ui.getLineCount()) {
 
                     int removeSize = ui.getLine(0).length() + ui.getLineDelimiter().length();
                     ui.replaceTextRange(0, removeSize, "");
@@ -474,7 +467,7 @@ public class ConsoleView extends AbstractUI<Console> {
         }
 
         /**
-         * @version 2011/12/02 14:50:58
+         * @version 2017/02/13 13:22:30
          */
         private class LineKeeper implements Listener {
 
@@ -482,7 +475,7 @@ public class ConsoleView extends AbstractUI<Console> {
             private boolean use = false;
 
             /**
-             * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+             * {@inheritDoc}
              */
             @Override
             public void handleEvent(Event event) {

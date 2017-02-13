@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package bebop.input;
+package toybox.work;
 
 import static org.eclipse.swt.internal.win32.OS.*;
 

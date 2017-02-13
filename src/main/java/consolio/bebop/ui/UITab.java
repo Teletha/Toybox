@@ -30,12 +30,12 @@ import kiss.Events;
 /**
  * @version 2017/02/10 10:51:40
  */
-public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelectableUI<M, Child> {
+public class UITab<M extends Selectable<Child>, Child> extends AbstractSelectableUI<M, Child> {
 
     /**
      * Hide constructor.
      */
-    TabFolder() {
+    UITab() {
     }
 
     private int minimumCharacters;
@@ -53,7 +53,7 @@ public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelec
      *                <li>ERROR_INVALID_RANGE - if the count is less than zero</li>
      *                </ul>
      */
-    public TabFolder<M, Child> minimumCharacters(int count) {
+    public UITab<M, Child> tabMinimumCharacters(int count) {
         this.minimumCharacters = count;
         return this;
     }
@@ -74,7 +74,7 @@ public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelec
      *                <li>ERROR_INVALID_ARGUMENT - if called with a height of less than 0</li>
      *                </ul>
      */
-    public TabFolder<M, Child> tabHeight(int height) {
+    public UITab<M, Child> tabHeight(int height) {
         this.tabHeight = height;
         return this;
     }
@@ -89,7 +89,7 @@ public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelec
      * @param text
      * @return
      */
-    public TabFolder<M, Child> tabText(String text) {
+    public UITab<M, Child> tabText(String text) {
         return tabText(child -> text);
     }
 
@@ -101,7 +101,7 @@ public class TabFolder<M extends Selectable<Child>, Child> extends AbstractSelec
      * @param text
      * @return
      */
-    public TabFolder<M, Child> tabText(Function<Child, String> text) {
+    public UITab<M, Child> tabText(Function<Child, String> text) {
         this.tabText = Objects.requireNonNull(text);
         return this;
     }
