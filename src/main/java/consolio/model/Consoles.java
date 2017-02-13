@@ -9,8 +9,8 @@
  */
 package consolio.model;
 
-import consolio.bebop.ui.Configurable;
-import consolio.bebop.ui.Selectable;
+import bebop.ui.Configurable;
+import bebop.ui.Selectable;
 import kiss.Manageable;
 import kiss.Singleton;
 

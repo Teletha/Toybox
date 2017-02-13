@@ -9,15 +9,15 @@
  */
 package consolio;
 
-import static consolio.bebop.ui.UI.*;
+import static bebop.ui.UI.*;
 
-import consolio.bebop.ui.Application;
-import consolio.bebop.ui.Key;
-import consolio.bebop.ui.Key.With;
-import consolio.bebop.ui.UI;
-import consolio.bebop.ui.UIBuilder;
-import consolio.bebop.ui.UITab;
-import consolio.bebop.ui.User;
+import bebop.ui.Application;
+import bebop.ui.Key;
+import bebop.ui.UI;
+import bebop.ui.UIBuilder;
+import bebop.ui.UITab;
+import bebop.ui.User;
+import bebop.ui.Key.With;
 import consolio.filesystem.FSPath;
 import consolio.model.Console;
 import consolio.model.Consoles;

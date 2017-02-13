@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consolio.bebop.ui;
+package bebop.ui;
 
 import java.beans.Transient;
 import java.util.ArrayList;

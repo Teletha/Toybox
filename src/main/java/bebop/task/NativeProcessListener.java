@@ -7,7 +7,7 @@
  *
  *          http://opensource.org/licenses/mit-license.php
  */
-package consolio.bebop.task;
+package bebop.task;
 
 import java.io.Writer;
 

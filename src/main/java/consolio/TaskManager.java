@@ -12,10 +12,10 @@ package consolio;
 import java.util.ArrayList;
 import java.util.List;
 
+import bebop.task.NativeProcess;
+import bebop.task.Worker;
+import bebop.ui.Configurable;
 import consolio.UIConsole.ConsoleText;
-import consolio.bebop.task.NativeProcess;
-import consolio.bebop.task.Worker;
-import consolio.bebop.ui.Configurable;
 import consolio.model.Console;
 import kiss.Disposable;
 

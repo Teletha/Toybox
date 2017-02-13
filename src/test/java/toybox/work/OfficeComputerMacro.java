@@ -24,7 +24,7 @@ import kiss.I;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
-import consolio.bebop.ui.Key;
+import bebop.ui.Key;
 
 /**
  * @version 2012/09/19 16:26:33

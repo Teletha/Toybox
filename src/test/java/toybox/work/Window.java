@@ -28,7 +28,7 @@ import org.eclipse.swt.internal.win32.INPUT;
 import org.eclipse.swt.internal.win32.KEYBDINPUT;
 import org.eclipse.swt.internal.win32.TCHAR;
 
-import consolio.bebop.ui.Key;
+import bebop.ui.Key;
 
 /**
  * @version 2011/10/18 12:11:37

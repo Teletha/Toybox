@@ -7,7 +7,7 @@
  *
  *          http://opensource.org/licenses/mit-license.php
  */
-package consolio.bebop.ui;
+package bebop.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Objects;
 
 import org.eclipse.swt.widgets.Composite;
 
-import consolio.bebop.ui.UIBuilder.UINode;
+import bebop.ui.UIBuilder.UINode;
 
 /**
  * @version 2017/02/12 2:02:33

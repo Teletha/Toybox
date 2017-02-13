@@ -7,7 +7,7 @@
  *
  *          http://opensource.org/licenses/mit-license.php
  */
-package consolio.bebop.ui;
+package bebop.ui;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
-import consolio.bebop.ui.UIBuilder.UINode;
+import bebop.ui.UIBuilder.UINode;
 import kiss.Events;
 
 /**

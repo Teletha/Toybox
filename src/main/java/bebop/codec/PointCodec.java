@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consolio.bebop.codec;
+package bebop.codec;
 
 import org.eclipse.swt.graphics.Point;
 

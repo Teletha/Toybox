@@ -9,7 +9,7 @@
  */
 package consolio;
 
-import static consolio.bebop.ui.UI.*;
+import static bebop.ui.UI.*;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -33,11 +33,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import bebop.task.NativeProcessListener;
+import bebop.ui.AbstractUI;
+import bebop.ui.Key;
+import bebop.ui.Materializer;
 import bebop.util.Resources;
-import consolio.bebop.task.NativeProcessListener;
-import consolio.bebop.ui.AbstractUI;
-import consolio.bebop.ui.Key;
-import consolio.bebop.ui.Materializer;
 import consolio.model.Console;
 import kiss.Disposable;
 import kiss.I;

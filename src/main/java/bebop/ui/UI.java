@@ -7,7 +7,7 @@
  *
  *          http://opensource.org/licenses/mit-license.php
  */
-package consolio.bebop.ui;
+package bebop.ui;
 
 import static java.util.concurrent.TimeUnit.*;
 
@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-import consolio.bebop.ui.Key.With;
+import bebop.ui.Key.With;
 import kiss.Events;
 
 /**
