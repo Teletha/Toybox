@@ -19,9 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import bebop.Listen;
 import bebop.dialog.Inputable;
-import bebop.ui.UIEvent;
 import kiss.I;
 import kiss.model.Model;
 import kiss.model.Property;
@@ -88,7 +86,6 @@ public abstract class Form<C extends Control> implements Comparable<Form> {
      * Save the form value to the binding property.
      * </p>
      */
-    @Listen(UIEvent.Dispose)
     protected abstract void save();
 
     /**
@@ -127,9 +124,6 @@ public abstract class Form<C extends Control> implements Comparable<Form> {
         if (initial != null) {
             load(initial);
         }
-
-        //
-        UIEvent.listen(ui, this);
     }
 
     /**

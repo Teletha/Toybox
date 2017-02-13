@@ -19,8 +19,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
-import bebop.Listen;
-import bebop.Speak;
 import bebop.input.KeyBind;
 import bebop.model.Selectable;
 import consolio.bebop.ui.Key;
@@ -28,8 +26,7 @@ import consolio.bebop.ui.Key;
 /**
  * @version 2012/02/29 23:58:17
  */
-public abstract class TabUI<Model extends Selectable<SubModel>, SubModel>
-        extends AbstractSelectableUI<Model, SubModel, CTabFolder> {
+public abstract class TabUI<Model extends Selectable<SubModel>, SubModel> extends AbstractSelectableUI<Model, SubModel, CTabFolder> {
 
     /**
      * <p>
@@ -133,7 +130,6 @@ public abstract class TabUI<Model extends Selectable<SubModel>, SubModel>
     /**
      * Notify tab selection event to model.
      */
-    @Listen(UIEvent.Selection)
     protected void selection(Event e) {
         model.setSelectionIndex(ui.indexOf((CTabItem) e.item));
     }
@@ -141,7 +137,6 @@ public abstract class TabUI<Model extends Selectable<SubModel>, SubModel>
     /**
      * Notify tab closing event to model.
      */
-    @Listen(UIEvent.MouseUp)
     protected void removeTabByMiddleClick(Event e) {
         if (e.button == 2) {
             // mouse middle click
@@ -156,7 +151,6 @@ public abstract class TabUI<Model extends Selectable<SubModel>, SubModel>
     /**
      * Notify tab closing event to model.
      */
-    @Listen(UIEvent.Close)
     protected void close(CTabFolderEvent e) {
         model.remove(model.get(ui.indexOf((CTabItem) e.item)));
     }
@@ -165,7 +159,6 @@ public abstract class TabUI<Model extends Selectable<SubModel>, SubModel>
      * {@inheritDoc}
      */
     @Override
-    @Speak
     public void select(SubModel item) {
         int index = model.indexOf(item);
 
@@ -191,7 +184,6 @@ public abstract class TabUI<Model extends Selectable<SubModel>, SubModel>
      * {@inheritDoc}
      */
     @Override
-    @Speak
     public void deselect(SubModel item) {
     }
 
@@ -199,7 +191,6 @@ public abstract class TabUI<Model extends Selectable<SubModel>, SubModel>
      * {@inheritDoc}
      */
     @Override
-    @Speak
     public void add(SubModel model) {
         CTabItem tab = new CTabItem(ui, SWT.None);
         labelTab(tab, model);
@@ -214,7 +205,6 @@ public abstract class TabUI<Model extends Selectable<SubModel>, SubModel>
      * {@inheritDoc}
      */
     @Override
-    @Speak
     public void remove(SubModel item, int index) {
         CTabItem tab = ui.getItem(index);
 

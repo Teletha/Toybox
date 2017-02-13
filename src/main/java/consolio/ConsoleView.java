@@ -33,14 +33,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-import bebop.InUIThread;
 import bebop.input.KeyBind;
 import bebop.util.Resources;
+import consolio.bebop.task.NativeProcessListener;
 import consolio.bebop.ui.AbstractUI;
 import consolio.bebop.ui.Key;
 import consolio.bebop.ui.Materializer;
 import consolio.model.Console;
-import consolio.util.NativeProcessListener;
 import kiss.Disposable;
 import kiss.I;
 
@@ -242,7 +241,6 @@ public class ConsoleView extends AbstractUI<Console> {
          * {@inheritDoc}
          */
         @Override
-        @InUIThread
         public void message(String message, String eol) {
             write(message + eol);
         }
@@ -263,66 +261,69 @@ public class ConsoleView extends AbstractUI<Console> {
          * 
          * @param message A message to write.
          */
+
         public void write(CharSequence message) {
-            // should we keep bottom line?
-            if (ui.getLineIndex(ui.getClientArea().height) == ui.getLineCount() - 1) {
-                if (!keeper.use) {
-                    keeper.use = true;
-                    ui.addListener(SWT.Modify, keeper);
+            process(() -> {
+                // should we keep bottom line?
+                if (ui.getLineIndex(ui.getClientArea().height) == ui.getLineCount() - 1) {
+                    if (!keeper.use) {
+                        keeper.use = true;
+                        ui.addListener(SWT.Modify, keeper);
+                    }
+                } else {
+                    if (keeper.use) {
+                        keeper.use = false;
+                        ui.removeListener(SWT.Modify, keeper);
+                    }
                 }
-            } else {
-                if (keeper.use) {
-                    keeper.use = false;
-                    ui.removeListener(SWT.Modify, keeper);
+
+                // append actual text
+                if (0 <= carriageReturned) {
+                    ui.replaceTextRange(carriageReturned, ui.getCharCount() - carriageReturned, message.toString());
+                    caretStartPosition = carriageReturned + message.length();
+                    carriageReturned = -1;
+                } else {
+                    ui.replaceTextRange(caretStartPosition, 0, message.toString());
+                    caretStartPosition += message.length();
                 }
-            }
 
-            // append actual text
-            if (0 <= carriageReturned) {
-                ui.replaceTextRange(carriageReturned, ui.getCharCount() - carriageReturned, message.toString());
-                caretStartPosition = carriageReturned + message.length();
-                carriageReturned = -1;
-            } else {
-                ui.replaceTextRange(caretStartPosition, 0, message.toString());
-                caretStartPosition += message.length();
-            }
+                // wrap indent
+                // search header space
+                int index = 0;
 
-            // wrap indent
-            // search header space
-            int index = 0;
-
-            for (; index < message.length(); index++) {
-                if (!Character.isWhitespace(message.charAt(index))) {
-                    break;
+                for (; index < message.length(); index++) {
+                    if (!Character.isWhitespace(message.charAt(index))) {
+                        break;
+                    }
                 }
-            }
 
-            if (index != 0) {
-                GC canvas = new GC(ui);
-                int width = canvas.textExtent(message.subSequence(0, index).toString()).y;
-                canvas.dispose();
+                if (index != 0) {
+                    GC canvas = new GC(ui);
+                    int width = canvas.textExtent(message.subSequence(0, index).toString()).y;
+                    canvas.dispose();
 
-                ui.setLineWrapIndent(ui.getLineCount() - 2, 1, width);
-            }
+                    ui.setLineWrapIndent(ui.getLineCount() - 2, 1, width);
+                }
 
-            if (message.length() != 0 && message.charAt(message.length() - 1) == '\r') {
-                carriageReturned = ui.getOffsetAtLine(ui.getLineCount() - 2);
-            }
+                if (message.length() != 0 && message.charAt(message.length() - 1) == '\r') {
+                    carriageReturned = ui.getOffsetAtLine(ui.getLineCount() - 2);
+                }
 
-            // start URI pattern matching
-            Matcher matcher = URL_PATTERN.matcher(message);
+                // start URI pattern matching
+                Matcher matcher = URL_PATTERN.matcher(message);
 
-            while (matcher.find()) {
-                String link = matcher.group();
+                while (matcher.find()) {
+                    String link = matcher.group();
 
-                StyleRange style = new StyleRange(caretStartPosition - message.length() + matcher.start(), link.length(), Resources
-                        .getColor(0, 51, 200), null);
-                style.underline = true;
-                style.underlineStyle = SWT.UNDERLINE_LINK;
-                style.data = link;
+                    StyleRange style = new StyleRange(caretStartPosition - message.length() + matcher.start(), link.length(), Resources
+                            .getColor(0, 51, 200), null);
+                    style.underline = true;
+                    style.underlineStyle = SWT.UNDERLINE_LINK;
+                    style.data = link;
 
-                ui.setStyleRange(style);
-            }
+                    ui.setStyleRange(style);
+                }
+            });
         }
 
         /**
@@ -410,13 +411,14 @@ public class ConsoleView extends AbstractUI<Console> {
         /**
          * Helper method to write system message.
          */
-        @InUIThread
         protected void writeConsoleText() {
-            // create console text
-            write(ui.getCharCount() == 0 ? "$ " : "\r\n$ ");
+            process(() -> {
+                // create console text
+                write(ui.getCharCount() == 0 ? "$ " : "\r\n$ ");
 
-            // open console
-            enableConsole();
+                // open console
+                enableConsole();
+            });
         }
 
         /**

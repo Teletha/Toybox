@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import bebop.ui.AbstractUI;
-import bebop.ui.UIEvent;
 import bebop.util.Resources;
 import kiss.Extensible;
 import kiss.I;
@@ -85,8 +84,6 @@ public class ApplicationWindow<RootModel> implements Extensible {
         AbstractUI rootUI = I.find(AbstractUI.class, modelType);
         rootUI.initialize(shell, model);
 
-        UIEvent.listen(rootUI.ui, this);
-
         // Restore window location and size.
         shell.setBounds(bounds);
 
@@ -98,7 +95,6 @@ public class ApplicationWindow<RootModel> implements Extensible {
         shell.open();
     }
 
-    @InUIThread
     public void active() {
         shell.forceActive();
     }

@@ -12,11 +12,11 @@ package consolio;
 import java.util.ArrayList;
 import java.util.List;
 
-import bebop.InWorkerThread;
 import consolio.ConsoleView.ConsoleText;
+import consolio.bebop.task.NativeProcess;
+import consolio.bebop.task.Worker;
 import consolio.bebop.ui.Configurable;
 import consolio.model.Console;
-import consolio.util.NativeProcess;
 import kiss.Disposable;
 
 /**
@@ -59,10 +59,11 @@ public class TaskManager implements Configurable<TaskManager> {
      * @param ui
      * @param input
      */
-    @InWorkerThread
     Disposable execute(Console console, ConsoleText ui, String input) {
         addHistory(input);
-        return NativeProcess.execute(input, console.getContext().toPath(), ui);
+
+        Worker.process(() -> NativeProcess.execute(input, console.getContext().toPath(), ui));
+        return Disposable.Φ;
     }
 
     /**

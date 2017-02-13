@@ -9,25 +9,16 @@
  */
 package bebop.ui;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolder2Listener;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Widget;
 
-import bebop.Listen;
-import bebop.model.Selectable;
 import bebop.model.SelectableListener;
 import kiss.I;
-import kiss.Table;
-import kiss.model.Model;
 
 /**
  * @version 2012/03/01 22:50:35
@@ -118,80 +109,6 @@ public enum UIEvent {
      */
     private UIEvent(int type) {
         this.type = type;
-    }
-
-    /**
-     * <p>
-     * The widget will publish user interface related evnets and the listener will subscribe them.
-     * </p>
-     * 
-     * @param publisher A event publisher.
-     * @param widget A event subscriber.
-     */
-    public static void listen(Widget publisher, Object subscriber) {
-        Table<Method, Annotation> table = Model.collectAnnotatedMethods(subscriber.getClass());
-
-        for (Entry<Method, List<Annotation>> entry : table.entrySet()) {
-            Method method = entry.getKey();
-
-            for (Annotation annotation : entry.getValue()) {
-                if (annotation instanceof Listen) {
-                    Listen subscribe = (Listen) annotation;
-
-                    UIEvent event = subscribe.value();
-
-                    switch (event) {
-                    case Close:
-                    case Minimize:
-                    case Maximize:
-                    case Restore:
-                    case ShowList:
-                        ((CTabFolder) publisher).addCTabFolder2Listener(new UIEventListener(subscriber, method, event));
-                        break;
-
-                    default:
-                        publisher.addListener(event.type, new UIEventListener(subscriber, method, event));
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * <p>
-     * The widget will publish user interface related evnets and the listener will subscribe them.
-     * </p>
-     * 
-     * @param publisher A event publisher.
-     * @param widget A event subscriber.
-     */
-    public static void listen(Selectable publisher, Object subscriber) {
-        Table<Method, Annotation> table = Model.collectAnnotatedMethods(subscriber.getClass());
-
-        for (Entry<Method, List<Annotation>> entry : table.entrySet()) {
-            Method method = entry.getKey();
-
-            for (Annotation annotation : entry.getValue()) {
-                if (annotation instanceof Listen) {
-                    Listen subscribe = (Listen) annotation;
-
-                    UIEvent event = subscribe.value();
-
-                    switch (event) {
-                    case Model_Select:
-                    case Model_Deselect:
-                    case Model_Add:
-                    case Model_Remove:
-                        publisher.listen(new ModelEventListener(subscriber, method, event));
-                        break;
-
-                    default:
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     /**

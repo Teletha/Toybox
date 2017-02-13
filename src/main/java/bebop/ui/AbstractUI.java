@@ -53,8 +53,6 @@ public abstract class AbstractUI<M, W extends Composite> implements Extensible {
         this.model = model;
         this.ui = createUI(parent);
 
-        UIEvent.listen(ui, this);
-
         // Register a listener to display the background image. In order to display the background
         // image properly when the widget shows, we have to register it before all other listeners
         // which may do painting.

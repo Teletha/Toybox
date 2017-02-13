@@ -9,6 +9,10 @@
  */
 package consolio.bebop.ui;
 
+import static java.util.concurrent.TimeUnit.*;
+
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -30,6 +34,25 @@ public class UI {
 
     /** The model key. */
     static final String KeyModel = UI.class.getName() + "$Model$";
+
+    /**
+     * <p>
+     * Ensure that the specified process runs in UI thread.
+     * </p>
+     * 
+     * @param process
+     */
+    public static void process(Runnable process) {
+        if (process != null) {
+            Display display = Display.getCurrent();
+
+            if (display != null) {
+                process.run();
+            } else {
+                Thread.accept(process);
+            }
+        }
+    }
 
     /**
      * <p>

@@ -9,15 +9,12 @@
  */
 package bebop.form;
 
-import kiss.I;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import bebop.Listen;
-import bebop.ui.UIEvent;
+import kiss.I;
 
 /**
  * @version 2012/03/16 14:02:54
@@ -59,7 +56,6 @@ public class TextForm extends Form<Text> {
      * Select all text if needed.
      * </p>
      */
-    @Listen(UIEvent.FocusIn)
     protected void select() {
         if (description.select()) {
             ui.selectAll();

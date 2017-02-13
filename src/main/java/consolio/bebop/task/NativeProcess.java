@@ -7,7 +7,7 @@
  *
  *          http://opensource.org/licenses/mit-license.php
  */
-package consolio.util;
+package consolio.bebop.task;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
