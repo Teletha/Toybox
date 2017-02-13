@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Listener;
 import bebop.task.NativeProcessListener;
 import bebop.ui.AbstractUI;
 import bebop.ui.Key;
+import bebop.ui.Key.With;
 import bebop.ui.Materializer;
 import bebop.util.Resources;
 import consolio.model.Console;
@@ -128,10 +129,11 @@ public class UIConsole extends AbstractUI<Console> {
             ui.addListener(SWT.MouseDoubleClick, detector);
             ui.addExtendedModifyListener(lineLimiter);
 
-            whenUserPress(Key.End).at(ui).to(this::end);
-            whenUserPress(Key.Home).at(ui).to(this::home);
-            whenUserPress(Key.Up).at(ui).to(this::up);
-            whenUserPress(Key.Down).at(ui).to(this::down);
+            whenUserPress(Key.End).at(ui).to(this::scrollToBottom);
+            whenUserPress(Key.Home).at(ui).to(this::scrollToTop);
+            whenUserPress(Key.Up).at(ui).to(this::showPreviousTask);
+            whenUserPress(Key.Down).at(ui).to(this::showNextTask);
+            whenUserPress(Key.C, With.Ctrl).at(ui).to(this::terminate);
         }
 
         /**
@@ -143,39 +145,6 @@ public class UIConsole extends AbstractUI<Console> {
          */
         public void setOutput(Writer output) {
             this.output = output;
-        }
-
-        public void end() {
-            ui.setTopIndex(ui.getLineCount() - 1);
-        }
-
-        public void home() {
-            ui.setTopIndex(0);
-        }
-
-        public void up() {
-            ui.replaceTextRange(caretStartPosition, ui.getCharCount() - caretStartPosition, manager.prev());
-
-            // move caret to the end of previous command message
-            ui.setCaretOffset(ui.getCharCount());
-
-            end();
-        }
-
-        public void down() {
-            ui.replaceTextRange(caretStartPosition, ui.getCharCount() - caretStartPosition, manager.next());
-
-            // move caret to the end of next command message
-            ui.setCaretOffset(ui.getCharCount());
-
-            end();
-        }
-
-        public void terminate() {
-            if (currentTask != null) {
-                currentTask.dispose();
-                currentTask = null;
-            }
         }
 
         /**
@@ -415,6 +384,64 @@ public class UIConsole extends AbstractUI<Console> {
                 // open console
                 enableConsole();
             });
+        }
+
+        /**
+         * <p>
+         * Show previous task.
+         * </p>
+         */
+        private void showPreviousTask() {
+            ui.replaceTextRange(caretStartPosition, ui.getCharCount() - caretStartPosition, manager.prev());
+
+            // move caret to the end of previous command message
+            ui.setCaretOffset(ui.getCharCount());
+
+            scrollToBottom();
+        }
+
+        /**
+         * <p>
+         * Show next task.
+         * </p>
+         */
+        private void showNextTask() {
+            ui.replaceTextRange(caretStartPosition, ui.getCharCount() - caretStartPosition, manager.next());
+
+            // move caret to the end of next command message
+            ui.setCaretOffset(ui.getCharCount());
+
+            scrollToBottom();
+        }
+
+        /**
+         * <p>
+         * Scroll to bottom of this widget.
+         * </p>
+         */
+        private void scrollToBottom() {
+            ui.setTopIndex(ui.getLineCount() - 1);
+        }
+
+        /**
+         * <p>
+         * Scroll to top of this widget.
+         * </p>
+         */
+        private void scrollToTop() {
+            ui.setTopIndex(0);
+        }
+
+        /**
+         * <p>
+         * Terminate current task.
+         * </p>
+         */
+        private void terminate() {
+            if (currentTask != null) {
+                currentTask.dispose();
+                currentTask = null;
+            }
         }
 
         /**

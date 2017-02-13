@@ -9,6 +9,9 @@
  */
 package consolio.model;
 
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
+
 import consolio.filesystem.FSPath;
 
 /**
@@ -17,25 +20,5 @@ import consolio.filesystem.FSPath;
 public class Console {
 
     /** The current context directory. */
-    private FSPath context;
-
-    /**
-     * - Get the context property of this {@link Console}.
-     * 
-     * @return The context property.
-     */
-    public FSPath getContext() {
-        return context;
-    }
-
-    /**
-     * Set the context property of this {@link Console}.
-     * 
-     * @param context The context value to set.
-     */
-    public void setContext(FSPath context) {
-        if (context != null) {
-            this.context = context;
-        }
-    }
+    public Property<FSPath> context = new SimpleObjectProperty();
 }

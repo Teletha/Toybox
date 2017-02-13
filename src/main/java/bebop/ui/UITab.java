@@ -9,10 +9,14 @@
  */
 package bebop.ui;
 
+import static bebop.ui.UI.*;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+
+import javafx.beans.value.ObservableValue;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -26,11 +30,16 @@ import org.eclipse.swt.widgets.Widget;
 
 import bebop.ui.UIBuilder.UINode;
 import kiss.Events;
+import kiss.I;
 
 /**
  * @version 2017/02/10 10:51:40
  */
 public class UITab<M extends Selectable<Child>, Child> extends AbstractSelectableUI<M, Child> {
+
+    /** The select tab event. */
+    public final Events<Child> select = when(User.Select).at(this)
+            .map(e -> (Child) ((CTabFolder) e.widget).getSelection().getData(UI.KeyModel));
 
     /**
      * Hide constructor.
@@ -152,6 +161,12 @@ public class UITab<M extends Selectable<Child>, Child> extends AbstractSelectabl
                 CTabItem tab = new CTabItem(folder, SWT.None, index == -1 ? size() : index);
                 tab.setText(tabText.apply(model));
                 tab.setData(UI.KeyModel, model);
+
+                if (model instanceof ObservableValue) {
+                    I.observe((ObservableValue) model).to(e -> {
+                        System.out.println("change value " + e + "   on  " + tab);
+                    });
+                }
 
                 this.model.remove.take(model::equals).take(1).to(tab::dispose);
 

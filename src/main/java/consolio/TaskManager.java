@@ -9,6 +9,7 @@
  */
 package consolio;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +17,19 @@ import bebop.task.NativeProcess;
 import bebop.task.Worker;
 import bebop.ui.Configurable;
 import consolio.UIConsole.ConsoleText;
+import consolio.filesystem.FSPath;
 import consolio.model.Console;
+import consolio.model.Consoles;
 import kiss.Disposable;
+import kiss.I;
 
 /**
  * @version 2017/02/13 9:20:03
  */
 public class TaskManager implements Configurable<TaskManager> {
+
+    /** The root model. */
+    private final Consoles consoles = I.make(Consoles.class);
 
     /** The command history. */
     private List<String> history = new ArrayList();
@@ -62,8 +69,30 @@ public class TaskManager implements Configurable<TaskManager> {
     Disposable execute(Console console, ConsoleText ui, String input) {
         addHistory(input);
 
-        Worker.process(() -> NativeProcess.execute(input, console.getContext().toPath(), ui));
+        // consolio special task
+        if (input.startsWith("cd ")) {
+            changeDirectory(console, input.substring(3));
+
+            ui.writeConsoleText();
+        } else {
+            Worker.process(() -> NativeProcess.execute(input, console.context.getValue().toPath(), ui));
+        }
         return Disposable.Φ;
+    }
+
+    /**
+     * <p>
+     * Change directory
+     * </p>
+     * 
+     * @param console
+     * @param intput
+     */
+    private void changeDirectory(Console console, String intput) {
+        Path resolved = console.context.getValue().toPath().resolve(intput);
+        console.context.setValue(FSPath.locate(resolved));
+
+        consoles.store();
     }
 
     /**

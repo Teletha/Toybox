@@ -13,11 +13,11 @@ import static bebop.ui.UI.*;
 
 import bebop.ui.Application;
 import bebop.ui.Key;
+import bebop.ui.Key.With;
 import bebop.ui.UI;
 import bebop.ui.UIBuilder;
 import bebop.ui.UITab;
 import bebop.ui.User;
-import bebop.ui.Key.With;
 import consolio.filesystem.FSPath;
 import consolio.model.Console;
 import consolio.model.Consoles;
@@ -35,10 +35,10 @@ public class Consolio extends Application {
     private final UITab<Consoles, Console> tabs = UI.tab(Consoles.class)
             .tabMinimumCharacters(10)
             .tabHeight(22)
-            .tabText(item -> " " + item.getContext().getName() + " ");
+            .tabText(item -> " " + item.context.getValue().getName() + " ");
 
     /** The editable console. */
-    private final UIConsole consoleUI = new UIConsole().lineLimit(2000);
+    private final UIConsole consoleUI = new UIConsole().lineLimit(20);
 
     /**
      * 
@@ -46,7 +46,7 @@ public class Consolio extends Application {
     private Consolio() {
         whenUserPress(Key.T, With.Ctrl).at(tabs).to(e -> {
             Console console = new Console();
-            console.setContext(FSPath.locate(I.locate("")));
+            console.context.setValue(FSPath.locate(I.locate("")));
             consoles.add(console);
         });
 
@@ -55,6 +55,10 @@ public class Consolio extends Application {
         });
 
         consoles.add.merge(consoles.remove).to(this::updateView);
+
+        tabs.select.to(e -> {
+            shell.setText(e.context.getValue().toString());
+        });
     }
 
     /**

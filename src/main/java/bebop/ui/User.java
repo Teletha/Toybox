@@ -51,7 +51,11 @@ public enum User {
 
     Move(SWT.Move),
 
-    Resize(SWT.Resize);
+    Resize(SWT.Resize),
+
+    Select(SWT.Selection),
+
+    SelectDefault(SWT.DefaultSelection);
 
     /** The action type identifier. */
     final int type;
