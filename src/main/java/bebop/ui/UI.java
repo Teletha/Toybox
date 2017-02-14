@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
+import bebop.model.Selectable;
 import bebop.ui.Key.With;
 import kiss.Events;
 

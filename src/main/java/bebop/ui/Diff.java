@@ -23,10 +23,10 @@ import bebop.ui.UIBuilder.UINode;
 class Diff {
 
     static void apply(Composite composite, UIBuilder prev, UIBuilder next) {
-        List<Patch> patches = new ArrayList();
+        List<Runnable> patches = new ArrayList();
         patches.addAll(diff(composite, prev.root, next.root));
 
-        for (Patch patch : patches) {
+        for (Runnable patch : patches) {
             System.out.println(patch);
             patch.run();
         }
@@ -41,8 +41,8 @@ class Diff {
      * @param next A next state.
      * @return
      */
-    static List<Patch> diff(Composite composite, List<UINode> prev, List<UINode> next) {
-        List<Patch> patches = new ArrayList();
+    static List<Runnable> diff(Composite composite, List<UINode> prev, List<UINode> next) {
+        List<Runnable> patches = new ArrayList();
 
         int prevSize = prev.size();
         int nextSize = next.size();

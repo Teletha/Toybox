@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 
 import org.eclipse.swt.widgets.Composite;
 
+import bebop.model.Selectable;
 import bebop.ui.UIBuilder.UINode;
 import kiss.Tree;
 

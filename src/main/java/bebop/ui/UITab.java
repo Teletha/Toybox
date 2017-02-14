@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
+import bebop.model.Selectable;
 import bebop.ui.UIBuilder.UINode;
 import kiss.Events;
 import kiss.I;
