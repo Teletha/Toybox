@@ -234,7 +234,7 @@ public abstract class Application {
             // Launching Phase
             // =====================================================================
             // load UI library
-            I.load(Application.class, true);
+            I.load(Application.class, false);
 
             // load application library
             I.load(applicationClass, true);

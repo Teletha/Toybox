@@ -31,6 +31,7 @@ public interface Configurable<Self> {
             I.read(locate(), this);
         } catch (Throwable e) {
             // ignore error
+            e.printStackTrace();
         }
         return (Self) this;
     }
@@ -47,6 +48,7 @@ public interface Configurable<Self> {
             I.write(this, locate());
         } catch (Throwable e) {
             // ignore error
+            e.printStackTrace();
         }
         return (Self) this;
     }
