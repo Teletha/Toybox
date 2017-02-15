@@ -9,7 +9,6 @@
  */
 package bebop.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -18,6 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import bebop.model.Selectable;
 import bebop.ui.UIBuilder.UINode;
 import kiss.Tree;
+import kiss.TreeNode;
 
 /**
  * @version 2017/02/09 9:59:32
@@ -39,45 +39,15 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
     protected final <Model> void $(AbstractUI<Model> ui, Model model) {
         $(ui);
     }
-    //
-    // public void materialize(Composite composite) {
-    // for (UINode node : root) {
-    // materialize(composite, node);
-    // }
-    // }
 
     /**
-     * <p>
-     * Build actual ui.
-     * </p>
-     * 
-     * @param parent
-     * @param node
+     * @version 2017/02/15 21:00:37
      */
-    private void materialize(Composite parent, UINode node) {
-        // Widget widget = node.ui.build(parent, node.model);
-        //
-        // if (widget instanceof Composite) {
-        // Composite composite = (Composite) widget;
-        //
-        // for (UINode child : node.children) {
-        // materialize(composite, child);
-        // }
-        // }
-    }
-
-    /**
-     * @version 2017/02/09 10:00:16
-     */
-    static class UINode implements Consumer<UINode> {
+    static class UINode extends TreeNode<UINode, UINode, Composite> {
 
         final AbstractUI ui;
 
-        final int id;
-
         Object model;
-
-        List<UINode> children = new ArrayList();
 
         /**
          * 
@@ -92,8 +62,35 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
          * {@inheritDoc}
          */
         @Override
-        public void accept(UINode parent) {
-            parent.children.add(this);
+        protected void addTo(Composite parent, Object index) {
+            ui.materialize(parent, model, nodes);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected void removeFrom(Composite parent) {
+            super.removeFrom(parent);
+            System.out.println("remove");
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected void moveTo(Composite parent) {
+            super.moveTo(parent);
+            System.out.println("move");
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected void diff(List<Runnable> patches, UINode next) {
+            super.diff(patches, next);
+            System.err.println("diff");
         }
 
         /**

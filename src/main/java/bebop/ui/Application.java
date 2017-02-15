@@ -21,6 +21,7 @@ import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.swt.SWT;
@@ -31,6 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import bebop.util.Resources;
 import kiss.I;
+import kiss.TreeNode;
 
 /**
  * @version 2017/02/08 20:00:04
@@ -85,7 +87,11 @@ public abstract class Application {
     protected final void updateView() {
         UIBuilder ui = virtualize();
 
-        Diff.apply(shell, latest, ui);
+        List<Runnable> patches = TreeNode.diff(shell, latest.root, ui.root);
+
+        for (Runnable patch : patches) {
+            patch.run();
+        }
     }
 
     /**

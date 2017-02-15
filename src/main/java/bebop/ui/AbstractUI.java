@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
@@ -58,17 +60,38 @@ public abstract class AbstractUI<M> {
         for (Entry<User, List<BiConsumer<User, Event>>> entry : listeners.entrySet()) {
             User user = entry.getKey();
 
-            materializer.widget.addListener(user.type, e -> {
-                e.data = model;
+            Display.getDefault().addFilter(user.type, e -> {
+                Widget widget = find(e.widget, materializer.widget);
 
-                for (BiConsumer<User, Event> listener : entry.getValue()) {
-                    listener.accept(user, e);
+                if (widget != null) {
+                    for (BiConsumer<User, Event> listener : entry.getValue()) {
+                        listener.accept(user, e);
+                    }
                 }
             });
         }
 
         materializer.materializeChildren(children, (composite, child) -> {
-            child.ui.materialize(composite, child.model, child.children);
+            child.ui.materialize(composite, child.model, child.nodes);
         });
+    }
+
+    /**
+     * <p>
+     * Find suitable widget for event bubbling.
+     * </p>
+     * 
+     * @param widget
+     * @param expected
+     * @return
+     */
+    private Widget find(Widget widget, Widget expected) {
+        if (widget == expected) {
+            return expected;
+        } else if (widget instanceof Control) {
+            return find(((Control) widget).getParent(), expected);
+        } else {
+            return null;
+        }
     }
 }
