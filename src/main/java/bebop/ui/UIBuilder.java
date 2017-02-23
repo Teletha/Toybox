@@ -25,9 +25,7 @@ import kiss.TreeNode;
 public class UIBuilder extends Tree<AbstractUI, UINode> {
 
     protected UIBuilder() {
-        super(UINode::new, (parent, child) -> {
-            child.accept(parent);
-        }, null);
+        super(UINode::new, null);
     }
 
     protected final <Model extends Selectable<Child>, Child> void $(AbstractSelectableUI<Model, Child> ui, Selectable<Child> model, Consumer<Child> item) {
@@ -43,7 +41,7 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
     /**
      * @version 2017/02/15 21:00:37
      */
-    static class UINode extends TreeNode<UINode, UINode, Composite> {
+    static class UINode extends TreeNode<UINode, Composite> {
 
         final AbstractUI ui;
 
@@ -53,8 +51,8 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
          * 
          */
         private UINode(AbstractUI ui, int id, Object model) {
+            super(id);
             this.ui = ui;
-            this.id = id;
             this.model = model;
         }
 
@@ -63,7 +61,7 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
          */
         @Override
         protected void addTo(Composite parent, Object index) {
-            ui.materialize(parent, model, nodes);
+            ui.materialize(parent, model, nodes());
         }
 
         /**
@@ -71,7 +69,6 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
          */
         @Override
         protected void removeFrom(Composite parent) {
-            super.removeFrom(parent);
             System.out.println("remove");
         }
 
@@ -80,7 +77,6 @@ public class UIBuilder extends Tree<AbstractUI, UINode> {
          */
         @Override
         protected void moveTo(Composite parent) {
-            super.moveTo(parent);
             System.out.println("move");
         }
 

@@ -72,7 +72,7 @@ public abstract class AbstractUI<M> {
         }
 
         materializer.materializeChildren(children, (composite, child) -> {
-            child.ui.materialize(composite, child.model, child.nodes);
+            child.ui.materialize(composite, child.model, child.nodes());
         });
     }
 
