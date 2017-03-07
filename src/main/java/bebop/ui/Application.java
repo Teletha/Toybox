@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import bebop.util.Resources;
+import kiss.Configurable;
 import kiss.I;
 import kiss.TreeNode;
 

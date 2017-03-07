@@ -10,7 +10,7 @@
 package consolio.model;
 
 import bebop.model.Selectable;
-import bebop.ui.Configurable;
+import kiss.Configurable;
 import kiss.Manageable;
 import kiss.Singleton;
 

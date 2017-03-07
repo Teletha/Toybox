@@ -15,11 +15,11 @@ import java.util.List;
 
 import bebop.task.NativeProcess;
 import bebop.task.Worker;
-import bebop.ui.Configurable;
 import consolio.UIConsole.ConsoleText;
 import consolio.filesystem.FSPath;
 import consolio.model.Console;
 import consolio.model.Consoles;
+import kiss.Configurable;
 import kiss.Disposable;
 import kiss.I;
 
