@@ -9,10 +9,6 @@
  */
 package bebop.ui;
 
-import static java.util.concurrent.TimeUnit.*;
-
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -102,7 +98,7 @@ public class UI {
          * @return An {@link Events} stream.
          */
         public Events<Event> at(AbstractUI<?> ui) {
-            return new Events<>(observer -> {
+            return new Events<>((observer, disposer) -> {
                 BiConsumer<User, Event> listener = (user, e) -> {
                     if (user.condition.test(e)) observer.accept(e);
                 };
@@ -130,7 +126,7 @@ public class UI {
          * @return An {@link Events} stream.
          */
         public Events<Event> at(Widget widget) {
-            return new Events<>(observer -> {
+            return new Events<>((observer, disposer) -> {
                 Listener listener = e -> {
                     observer.accept(e);
                 };
@@ -223,7 +219,7 @@ public class UI {
          * @return An {@link Events} stream.
          */
         public Events<Event> at(AbstractUI ui) {
-            return new Events<>(observer -> {
+            return new Events<>((observer, disposer) -> {
                 BiConsumer<User, Event> listener = (user, e) -> {
                     if (e.keyCode == key.code && e.stateMask == modifier) {
                         observer.accept(e);
@@ -249,7 +245,7 @@ public class UI {
          * @return An {@link Events} stream.
          */
         public Events<Event> at(Widget ui) {
-            return new Events<>(observer -> {
+            return new Events<>((observer, disposer) -> {
                 Listener listener = e -> {
                     if (e.keyCode == key.code && e.stateMask == modifier) {
                         observer.accept(e);
