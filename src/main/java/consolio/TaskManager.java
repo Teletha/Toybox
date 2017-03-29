@@ -77,7 +77,7 @@ public class TaskManager implements Configurable<TaskManager> {
         } else {
             Worker.process(() -> NativeProcess.execute(input, console.context.getValue().toPath(), ui));
         }
-        return Disposable.Φ;
+        return Disposable.empty();
     }
 
     /**
