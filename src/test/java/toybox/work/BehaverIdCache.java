@@ -17,13 +17,10 @@ import java.util.Map;
 import java.util.Objects;
 
 import kiss.I;
-import kiss.Manageable;
-import kiss.Preference;
 
 /**
  * @version 2012/09/11 16:43:48
  */
-@Manageable(lifestyle = Preference.class)
 public class BehaverIdCache {
 
     /** The actual mapping. */
