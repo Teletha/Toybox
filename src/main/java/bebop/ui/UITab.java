@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.Widget;
 
 import bebop.model.Selectable;
 import bebop.ui.UIBuilder.UINode;
-import kiss.Events;
 import kiss.I;
+import kiss.Signal;
 
 /**
  * @version 2017/02/10 10:51:40
@@ -39,7 +39,7 @@ import kiss.I;
 public class UITab<M extends Selectable<Child>, Child> extends AbstractSelectableUI<M, Child> {
 
     /** The select tab event. */
-    public final Events<Child> select = when(User.Select).at(this)
+    public final Signal<Child> select = when(User.Select).at(this)
             .map(e -> (Child) ((CTabFolder) e.widget).getSelection().getData(UI.KeyModel));
 
     /**
@@ -192,8 +192,8 @@ public class UITab<M extends Selectable<Child>, Child> extends AbstractSelectabl
      * {@inheritDoc}
      */
     @Override
-    public Events<Child> selectBy(Event e) {
-        return Events.from(e.widget)
+    public Signal<Child> selectBy(Event e) {
+        return Signal.from(e.widget)
                 .as(CTabFolder.class)
                 .map(folder -> folder.getItem(new Point(e.x, e.y)))
                 .map(item -> (Child) item.getData(UI.KeyModel));

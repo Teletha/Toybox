@@ -23,8 +23,8 @@ import java.util.Spliterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-import kiss.Events;
 import kiss.Observer;
+import kiss.Signal;
 
 /**
  * @version 2017/02/10 11:34:15
@@ -41,25 +41,25 @@ public abstract class Selectable<T> implements Iterable<T> {
     private List<Observer<? super T>> adds = new CopyOnWriteArrayList<>();
 
     /** The addtion event manager. */
-    public transient final Events<T> add = new Events<>(adds);
+    public transient final Signal<T> add = new Signal<>(adds);
 
     /** The remove event manager. */
     private List<Observer<? super T>> removes = new CopyOnWriteArrayList<>();
 
     /** The remove event manager. */
-    public transient final Events<T> remove = new Events<>(removes);
+    public transient final Signal<T> remove = new Signal<>(removes);
 
     /** The selection event manager. */
     private List<Observer<? super T>> selects = new CopyOnWriteArrayList<>();
 
     /** The selection event manager. */
-    public transient final Events<T> select = new Events<>(selects);
+    public transient final Signal<T> select = new Signal<>(selects);
 
     /** The deselection event manager. */
     private List<Observer<? super T>> deselects = new CopyOnWriteArrayList<>();
 
     /** The deselection event manager. */
-    public transient final Events<T> deselect = new Events<>(deselects);
+    public transient final Signal<T> deselect = new Signal<>(deselects);
 
     /**
      * Get the index property of this {@link Selectable}.

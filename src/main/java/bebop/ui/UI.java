@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Widget;
 
 import bebop.model.Selectable;
 import bebop.ui.Key.With;
-import kiss.Events;
+import kiss.Signal;
 
 /**
  * @version 2017/02/11 23:40:56
@@ -95,10 +95,10 @@ public class UI {
          * </p>
          * 
          * @param ui A target {@link AbstractUI}.
-         * @return An {@link Events} stream.
+         * @return An {@link Signal} stream.
          */
-        public Events<Event> at(AbstractUI<?> ui) {
-            return new Events<>((observer, disposer) -> {
+        public Signal<Event> at(AbstractUI<?> ui) {
+            return new Signal<>((observer, disposer) -> {
                 BiConsumer<User, Event> listener = (user, e) -> {
                     if (user.condition.test(e)) observer.accept(e);
                 };
@@ -123,10 +123,10 @@ public class UI {
          * </p>
          * 
          * @param widget A target {@link Widget}.
-         * @return An {@link Events} stream.
+         * @return An {@link Signal} stream.
          */
-        public Events<Event> at(Widget widget) {
-            return new Events<>((observer, disposer) -> {
+        public Signal<Event> at(Widget widget) {
+            return new Signal<>((observer, disposer) -> {
                 Listener listener = e -> {
                     observer.accept(e);
                 };
@@ -151,9 +151,9 @@ public class UI {
          * </p>
          * 
          * @param widget A target {@link Widget}.
-         * @return An {@link Events} stream.
+         * @return An {@link Signal} stream.
          */
-        public <W extends Widget> Events<W> in(W widget) {
+        public <W extends Widget> Signal<W> in(W widget) {
             return at(widget).mapTo(widget);
         }
     }
@@ -216,10 +216,10 @@ public class UI {
          * </p>
          * 
          * @param ui A target {@link AbstractUI}.
-         * @return An {@link Events} stream.
+         * @return An {@link Signal} stream.
          */
-        public Events<Event> at(AbstractUI ui) {
-            return new Events<>((observer, disposer) -> {
+        public Signal<Event> at(AbstractUI ui) {
+            return new Signal<>((observer, disposer) -> {
                 BiConsumer<User, Event> listener = (user, e) -> {
                     if (e.keyCode == key.code && e.stateMask == modifier) {
                         observer.accept(e);
@@ -242,10 +242,10 @@ public class UI {
          * </p>
          * 
          * @param ui A target {@link AbstractUI}.
-         * @return An {@link Events} stream.
+         * @return An {@link Signal} stream.
          */
-        public Events<Event> at(Widget ui) {
-            return new Events<>((observer, disposer) -> {
+        public Signal<Event> at(Widget ui) {
+            return new Signal<>((observer, disposer) -> {
                 Listener listener = e -> {
                     if (e.keyCode == key.code && e.stateMask == modifier) {
                         observer.accept(e);

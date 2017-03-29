@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Widget;
 
 import bebop.model.Selectable;
-import kiss.Events;
+import kiss.Signal;
 
 /**
  * @version 2017/02/11 15:10:46
@@ -29,7 +29,7 @@ public abstract class AbstractSelectableUI<M extends Selectable<Child>, Child> e
      * @param e A location as {@link Event}.
      * @return A located child model.
      */
-    public abstract Events<Child> selectBy(Event e);
+    public abstract Signal<Child> selectBy(Event e);
 
     /**
      * {@inheritDoc}
