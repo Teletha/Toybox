@@ -211,7 +211,7 @@ public class NativeProcess implements Disposable {
      * {@inheritDoc}
      */
     @Override
-    public void dispose() {
+    public void vandalize() {
         String command;
 
         try {
