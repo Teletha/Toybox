@@ -193,7 +193,7 @@ public class UITab<M extends Selectable<Child>, Child> extends AbstractSelectabl
      */
     @Override
     public Signal<Child> selectBy(Event e) {
-        return Signal.from(e.widget)
+        return I.signal(e.widget)
                 .as(CTabFolder.class)
                 .map(folder -> folder.getItem(new Point(e.x, e.y)))
                 .map(item -> (Child) item.getData(UI.KeyModel));
