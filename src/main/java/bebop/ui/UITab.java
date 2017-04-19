@@ -16,8 +16,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import javafx.beans.value.ObservableValue;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.CTabFolder;
@@ -162,12 +160,6 @@ public class UITab<M extends Selectable<Child>, Child> extends AbstractSelectabl
                 CTabItem tab = new CTabItem(folder, SWT.None, index == -1 ? size() : index);
                 tab.setText(tabText.apply(model));
                 tab.setData(UI.KeyModel, model);
-
-                if (model instanceof ObservableValue) {
-                    I.observe((ObservableValue) model).to(e -> {
-                        System.out.println("change value " + e + "   on  " + tab);
-                    });
-                }
 
                 this.model.remove.take(model::equals).take(1).to(tab::dispose);
 
