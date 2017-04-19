@@ -21,6 +21,7 @@ import bebop.ui.User;
 import consolio.filesystem.FSPath;
 import consolio.model.Console;
 import consolio.model.Consoles;
+import filer.Filer;
 import kiss.I;
 
 /**
@@ -46,7 +47,7 @@ public class Consolio extends Application {
     private Consolio() {
         whenUserPress(Key.T, With.Ctrl).at(tabs).to(e -> {
             Console console = new Console();
-            console.context.setValue(FSPath.locate(I.locate("")));
+            console.context.setValue(FSPath.locate(Filer.locate("")));
             consoles.add(console);
         });
 

@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import bebop.util.Resources;
+import filer.Filer;
 import kiss.Configurable;
 import kiss.I;
 import kiss.TreeNode;
@@ -130,12 +131,12 @@ public abstract class Application {
             new Activator(applicationClass, policy, args);
         } catch (Throwable e) {
             // handle appication error
-            Path path = I.locate(applicationClass);
+            Path path = Filer.locate(applicationClass);
 
             if (Files.isDirectory(path)) {
                 e.printStackTrace(System.out);
             } else {
-                try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(I.locate("error.log"), I.$encoding))) {
+                try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(Filer.locate("error.log"), I.$encoding))) {
                     e.printStackTrace(writer);
                 } catch (IOException io) {
                     io.printStackTrace(System.out);
@@ -200,7 +201,7 @@ public abstract class Application {
             if (policy != ActivationPolicy.Multiple) {
                 try {
                     // create application specified directory for lock
-                    Path root = I.locate(System.getProperty("java.io.tmpdir")).resolve(applicationClass.getName());
+                    Path root = Filer.locate(System.getProperty("java.io.tmpdir")).resolve(applicationClass.getName());
 
                     if (Files.notExists(root)) {
                         Files.createDirectory(root);
@@ -227,7 +228,7 @@ public abstract class Application {
                     }
 
                     // observe lock directory for next application
-                    I.observe(root).to(e -> {
+                    Filer.observe(root).to(e -> {
                         if (e.kind() == ENTRY_CREATE || e.kind() == ENTRY_MODIFY) {
                             notify(e.context());
                         }
@@ -276,7 +277,7 @@ public abstract class Application {
         private void initialize() {
             Shell shell = application.shell;
             shell.setLayout(new FillLayout(SWT.VERTICAL));
-            shell.setImage(Resources.getImage(I.locate("icon.ico")));
+            shell.setImage(Resources.getImage(Filer.locate("icon.ico")));
 
             // initialize application's common abilities
             I.make(WindowPreference.class).restore().size(shell);

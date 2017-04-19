@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2012 Nameless Production Committee
  *
@@ -9,8 +10,8 @@
  */
 import java.nio.file.Path;
 
-import kiss.I;
 import bee.util.ZipArchiver;
+import filer.Filer;
 
 /**
  * @version 2012/05/22 14:47:48
@@ -24,6 +25,6 @@ public class Install extends bee.task.Install {
     public void project() {
         Path zip = require(Exe.class).build();
 
-        ZipArchiver.unpack(zip, I.locate("F:\\Application/Toybox"));
+        ZipArchiver.unpack(zip, Filer.locate("F:\\Application/Toybox"));
     }
 }

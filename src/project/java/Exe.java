@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2012 Nameless Production Committee
  *
@@ -9,7 +10,7 @@
  */
 import java.nio.file.Path;
 
-import kiss.I;
+import filer.Filer;
 
 /**
  * @version 2012/05/24 15:39:08
@@ -21,7 +22,7 @@ public class Exe extends bee.task.Exe {
      */
     @Override
     public Path build() {
-        icon = I.locate("icon.ico");
+        icon = Filer.locate("icon.ico");
 
         return super.build();
     }

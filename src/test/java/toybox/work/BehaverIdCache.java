@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import filer.Filer;
 import kiss.I;
 
 /**
@@ -85,7 +86,7 @@ public class BehaverIdCache {
     public static void main(String[] args) throws Exception {
         BehaverIdCache map = I.make(BehaverIdCache.class);
         Map<Integer, String> mapping = new HashMap();
-        Path path = I.locate("\\\\Adm01018\\本坊-参詣課\\FTP受信\\住所録データ（任意会講分／参詣）.csv");
+        Path path = Filer.locate("\\\\Adm01018\\本坊-参詣課\\FTP受信\\住所録データ（任意会講分／参詣）.csv");
 
         for (String line : Files.readAllLines(path, Charset.forName("windows-31j"))) {
             String[] values = line.split(",");

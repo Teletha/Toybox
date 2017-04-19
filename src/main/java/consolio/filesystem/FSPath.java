@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 
+import filer.Filer;
 import kiss.I;
 
 /**
@@ -185,7 +186,7 @@ public abstract class FSPath implements Comparable<FSPath> {
             }
         } else {
             // by Path
-            return new FSPathByPath(I.locate(path), null);
+            return new FSPathByPath(Filer.locate(path), null);
         }
     }
 
