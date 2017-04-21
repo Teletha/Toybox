@@ -13,6 +13,7 @@ public class Project extends bee.api.Project {
         product("com.github.teletha", "toybox", "1.0");
 
         require("com.github.teletha", "sinobu", "1.0");
+        require("com.github.teletha", "filer", "0.5");
         require("org.eclipse.swt", "org.eclipse.swt.win32.win32.x86_64", "4.7M3");
         require("com.ibm.icu", "icu4j", "4.8.1.1");
         require("net.java.dev.jna", "platform", "3.5.1");
