@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
@@ -136,7 +137,7 @@ public abstract class Application {
             if (Files.isDirectory(path)) {
                 e.printStackTrace(System.out);
             } else {
-                try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(Filer.locate("error.log"), I.$encoding))) {
+                try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(Filer.locate("error.log"), StandardCharsets.UTF_8))) {
                     e.printStackTrace(writer);
                 } catch (IOException io) {
                     io.printStackTrace(System.out);
