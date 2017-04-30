@@ -13,33 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package bebop.codec;
+package bebop.ui;
 
-import org.eclipse.swt.graphics.Point;
+import static java.lang.Integer.*;
+
+import org.eclipse.swt.graphics.Rectangle;
 
 import kiss.Decoder;
 import kiss.Encoder;
 
 /**
- * @version 2017/02/09 3:14:38
+ * @version 2017/02/09 3:14:43
  */
-public class PointCodec implements Encoder<Point>, Decoder<Point> {
+class RectangleCodec implements Encoder<Rectangle>, Decoder<Rectangle> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String encode(Point value) {
-        return value.x + "," + value.y;
+    public String encode(Rectangle value) {
+        return value.x + " " + value.y + " " + value.width + " " + value.height;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Point decode(String value) {
-        String[] values = value.split(",");
-        return new Point(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+    public Rectangle decode(String value) {
+        String[] values = value.split(" ");
+        return new Rectangle(parseInt(values[0]), parseInt(values[1]), parseInt(values[2]), parseInt(values[3]));
     }
 
 }
