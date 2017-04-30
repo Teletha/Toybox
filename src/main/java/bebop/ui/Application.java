@@ -243,7 +243,7 @@ public abstract class Application {
             // Launching Phase
             // =====================================================================
             // load UI library
-            I.loadAll(PointCodec.class);
+            I.load(PointCodec.class, false);
 
             // build application
             application = I.make(applicationClass);
