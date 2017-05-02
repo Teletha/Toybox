@@ -10,13 +10,13 @@
 package consolio.model;
 
 import bebop.model.Selectable;
-import kiss.Configurable;
 import kiss.Manageable;
 import kiss.Singleton;
+import kiss.Storable;
 
 /**
  * @version 2017/02/09 4:43:55
  */
 @Manageable(lifestyle = Singleton.class)
-public class Consoles extends Selectable<Console> implements Configurable<Consoles> {
+public class Consoles extends Selectable<Console> implements Storable<Consoles> {
 }

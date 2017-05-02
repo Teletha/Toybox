@@ -19,14 +19,14 @@ import consolio.UIConsole.ConsoleText;
 import consolio.filesystem.FSPath;
 import consolio.model.Console;
 import consolio.model.Consoles;
-import kiss.Configurable;
 import kiss.Disposable;
 import kiss.I;
+import kiss.Storable;
 
 /**
  * @version 2017/02/13 9:20:03
  */
-public class TaskManager implements Configurable<TaskManager> {
+public class TaskManager implements Storable<TaskManager> {
 
     /** The root model. */
     private final Consoles consoles = I.make(Consoles.class);

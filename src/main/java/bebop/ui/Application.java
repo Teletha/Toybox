@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import bebop.util.Resources;
 import filer.Filer;
-import kiss.Configurable;
 import kiss.I;
+import kiss.Storable;
 import kiss.TreeNode;
 
 /**
@@ -329,7 +329,7 @@ public abstract class Application {
     /**
      * @version 2017/02/09 3:12:02
      */
-    private static class WindowPreference implements Configurable<WindowPreference> {
+    private static class WindowPreference implements Storable<WindowPreference> {
 
         /** The physical display. */
         private Rectangle screen = Display.getDefault().getPrimaryMonitor().getClientArea();
